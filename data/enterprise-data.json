@@ -1,0 +1,303 @@
+{
+  "metaAds": {
+    "meses": [
+      {
+        "mes": "Abril/2026",
+        "chave": "2026-04",
+        "investimento": 478.83,
+        "impressoes": 40892,
+        "alcance": 26574,
+        "cliques": 284,
+        "conversas": 13,
+        "cpa": 36.83,
+        "ctr": 0.69,
+        "cpc": 1.69,
+        "cpm": 11.71,
+        "frequencia": 1.54,
+        "roiOperacional": 0.027
+      },
+      {
+        "mes": "Maio/2026",
+        "chave": "2026-05",
+        "investimento": 976.05,
+        "impressoes": 554781,
+        "alcance": 323077,
+        "cliques": 928,
+        "conversas": 89,
+        "cpa": 10.97,
+        "ctr": 0.17,
+        "cpc": 1.05,
+        "cpm": 1.76,
+        "frequencia": 1.72,
+        "roiOperacional": 0.091
+      },
+      {
+        "mes": "Junho/2026",
+        "chave": "2026-06",
+        "investimento": 961.15,
+        "impressoes": 423872,
+        "alcance": 282771,
+        "cliques": 837,
+        "conversas": 106,
+        "cpa": 9.07,
+        "ctr": 0.2,
+        "cpc": 1.15,
+        "cpm": 2.27,
+        "frequencia": 1.5,
+        "roiOperacional": 0.11
+      }
+    ],
+    "campanhas": [
+      {
+        "mes": "2026-06",
+        "nome": "Tráfego | Maio | Whatsapp",
+        "investimento": 216.82,
+        "cliques": 218,
+        "conversas": 89,
+        "cpa": 2.44,
+        "iec": 98.6
+      },
+      {
+        "mes": "2026-06",
+        "nome": "Tráfego | Julho | Prod Tem",
+        "investimento": 163.55,
+        "cliques": 44,
+        "conversas": 25,
+        "cpa": 6.54,
+        "iec": 73.0
+      },
+      {
+        "mes": "2026-06",
+        "nome": "Tráfego Andaime Whatsapp",
+        "investimento": 10.03,
+        "cliques": 8,
+        "conversas": 1,
+        "cpa": 10.03,
+        "iec": 53.2
+      },
+      {
+        "mes": "2026-06",
+        "nome": "Tráfego | Junho | Kits | Whatsapp",
+        "investimento": 197.78,
+        "cliques": 296,
+        "conversas": 0,
+        "cpa": 0,
+        "iec": 15.9
+      },
+      {
+        "mes": "2026-05",
+        "nome": "Tráfego Andaime Whatsapp",
+        "investimento": 90.03,
+        "cliques": 31,
+        "conversas": 24,
+        "cpa": 3.75,
+        "iec": 96.4
+      },
+      {
+        "mes": "2026-05",
+        "nome": "Tráfego | Maio | Whatsapp",
+        "investimento": 380.69,
+        "cliques": 182,
+        "conversas": 56,
+        "cpa": 6.8,
+        "iec": 93.1
+      },
+      {
+        "mes": "2026-04",
+        "nome": "Tráfego | Maio | Whatsapp",
+        "investimento": 98.83,
+        "cliques": 64,
+        "conversas": 13,
+        "cpa": 7.6,
+        "iec": 78.2
+      }
+    ],
+    "insights": [
+      "Junho foi o mês mais eficiente, com menor CPA e melhor ROI operacional.",
+      "Campanhas de WhatsApp concentram o maior valor comercial, porque geram conversa direta.",
+      "Tráfego | Maio | Whatsapp deve ser mantida enquanto seguir com CPA baixo.",
+      "Kits WhatsApp precisa ser recriada: tem clique, mas baixa conversão em conversa.",
+      "Reconhecimento e vídeo devem ser lidos como topo de funil, não como venda direta.",
+      "Para calcular ROI financeiro real, precisamos conectar faturamento ou vendas por campanha."
+    ]
+  },
+  "expo": {
+    "evento": "ExpoConstruir 2026",
+    "periodo": "11 a 14/08/2026",
+    "metaFaturamento": 1000000,
+    "metaLeads": 500,
+    "metaLigacoes": 400,
+    "metaReunioes": 40,
+    "metaOportunidades": 10,
+    "metaConversao": 20,
+    "metaApps": 200,
+    "realizado": {
+      "visitantes": 500,
+      "leads": 100,
+      "ligacoes": 400,
+      "reunioes": 40,
+      "oportunidades": 10,
+      "conversao": 20,
+      "faturamentoInfluenciado": 200000,
+      "valorPipeline": 1000000,
+      "orcamentos": 25,
+      "pedidos": 0,
+      "apps": 64
+    },
+    "vendedores": [
+      {
+        "nome": "Vendedor 01",
+        "leads": 20,
+        "ligacoes": 80,
+        "reunioes": 8,
+        "oportunidades": 2,
+        "conversao": 20,
+        "pipeline": 200000
+      },
+      {
+        "nome": "Vendedor 02",
+        "leads": 20,
+        "ligacoes": 80,
+        "reunioes": 8,
+        "oportunidades": 2,
+        "conversao": 20,
+        "pipeline": 200000
+      },
+      {
+        "nome": "Vendedor 03",
+        "leads": 20,
+        "ligacoes": 80,
+        "reunioes": 8,
+        "oportunidades": 2,
+        "conversao": 20,
+        "pipeline": 200000
+      },
+      {
+        "nome": "Vendedor 04",
+        "leads": 20,
+        "ligacoes": 80,
+        "reunioes": 8,
+        "oportunidades": 2,
+        "conversao": 20,
+        "pipeline": 200000
+      },
+      {
+        "nome": "Vendedor 05",
+        "leads": 20,
+        "ligacoes": 80,
+        "reunioes": 8,
+        "oportunidades": 2,
+        "conversao": 20,
+        "pipeline": 200000
+      }
+    ],
+    "oportunidades": [
+      {
+        "empresa": "Construtora Alfa",
+        "negocio": "Eletrodos OK 48.00",
+        "valor": 150000,
+        "probabilidade": 80,
+        "previsao": "D+15"
+      },
+      {
+        "empresa": "Metalúrgica Brasil",
+        "negocio": "Parafusos Estruturais",
+        "valor": 120000,
+        "probabilidade": 70,
+        "previsao": "D+20"
+      },
+      {
+        "empresa": "Indústria Beta",
+        "negocio": "Consumíveis Solda",
+        "valor": 100000,
+        "probabilidade": 60,
+        "previsao": "D+18"
+      },
+      {
+        "empresa": "Montagens Sul",
+        "negocio": "Parafusos Inox",
+        "valor": 90000,
+        "probabilidade": 60,
+        "previsao": "D+25"
+      },
+      {
+        "empresa": "Engenharia Prime",
+        "negocio": "Eletrodos Especiais",
+        "valor": 80000,
+        "probabilidade": 50,
+        "previsao": "D+30"
+      }
+    ],
+    "origens": [
+      {
+        "nome": "Estande / Contato direto",
+        "valor": 60
+      },
+      {
+        "nome": "Indicação / Relacionamento",
+        "valor": 20
+      },
+      {
+        "nome": "QR Code / Materiais",
+        "valor": 10
+      },
+      {
+        "nome": "Outros",
+        "valor": 10
+      }
+    ],
+    "apps": [
+      {
+        "nome": "Solda Certa",
+        "cadastros": 28,
+        "leads": 18,
+        "oportunidades": 4
+      },
+      {
+        "nome": "Fixa Certo",
+        "cadastros": 24,
+        "leads": 16,
+        "oportunidades": 3
+      },
+      {
+        "nome": "Andaime Certo",
+        "cadastros": 12,
+        "leads": 8,
+        "oportunidades": 3
+      }
+    ]
+  },
+  "postFeira": {
+    "dias": [
+      {
+        "semana": "Semana 1",
+        "valor": 200000
+      },
+      {
+        "semana": "Semana 2",
+        "valor": 450000
+      },
+      {
+        "semana": "Semana 3",
+        "valor": 700000
+      },
+      {
+        "semana": "Semana 4",
+        "valor": 1000000
+      }
+    ],
+    "tarefas": [
+      "Reunião de alinhamento diário às 08h30",
+      "Atualização do CRM até 18h",
+      "Follow-up constante com leads quentes",
+      "Revisão de oportunidades críticas",
+      "Relatório de resultados toda sexta-feira"
+    ],
+    "alertas": [
+      "Volume de contatos dentro da meta.",
+      "Acompanhar oportunidades com previsão acima de D+20.",
+      "Manter disciplina de follow-up para acelerar conversão.",
+      "Foco total em transformar oportunidades em negócios."
+    ]
+  }
+}

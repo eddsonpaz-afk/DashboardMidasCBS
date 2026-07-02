@@ -1,5 +1,5 @@
-# Dashboard Meta Ads CBS/Waves - V2 Mensal
+# CBS Analytics Enterprise V4
 
-Dados principais filtrados por mês. Comparativo mês a mês mantém sempre os últimos 3 meses.
+Dashboard corporativo com Meta Ads, Sala de Guerra ExpoConstruir, Pós-feira, CRM e Apps.
 
-Suba todos os arquivos na raiz do repositório, mantendo a pasta data.
+Suba todos os arquivos na raiz do repositório mantendo a pasta data.

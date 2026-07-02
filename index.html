@@ -1,1 +1,53 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard Meta Ads | Waves Plus + CBS</title><link rel="stylesheet" href="estilos.css"></head><body><main class="app"><header class="topo"><div class="brand waves"><strong>Waves</strong><span>plus</span><small>Eletrodos & abrasivos</small></div><div class="titulo"><h1>Desempenho de Campanhas</h1><h2>Meta Ads</h2><p>Dashboard mensal com comparativo dos últimos 3 meses</p></div><div class="brand cbs"><strong>CBS</strong><span>Importadora</span><small>Parafusos e Porcas</small></div></header><section class="toolbar"><label>Selecione o mês principal:</label><select id="seletorMes"></select><span id="badgePeriodo"></span></section><section class="kpis" id="kpis"></section><section class="grid-principal"><aside class="painel mes"><h3>Desempenho do mês</h3><div id="desempenhoMes" class="lista-kpi"></div></aside><section class="painel comparativo"><h3>Comparativo mês a mês <small>últimos 3 meses</small></h3><div class="cards-meses" id="cardsMeses"></div></section><section class="painel funil"><h3>Funil de resultados</h3><div class="funnel"><div class="funnel-row azul"><span>Impressões</span><strong id="funilImpressoes"></strong></div><div class="funnel-row verde"><span>Cliques estimados</span><strong id="funilCliques"></strong></div><div class="funnel-row amarelo"><span>Conversas</span><strong id="funilConversas"></strong></div><div class="funnel-row vermelho"><span>Conversas/R$</span><strong id="funilRoi"></strong></div></div></section></section><section class="grid-secundario"><section class="painel campanhas"><h3>Ranking de campanhas <small id="campanhaMes"></small></h3><table><thead><tr><th>Campanha</th><th>Invest.</th><th>Cliques</th><th>Conversas</th><th>CPA</th><th>IEC</th></tr></thead><tbody id="tabelaCampanhas"></tbody></table></section><section class="painel idade"><h3>Por idade <small id="idadeMes"></small></h3><div id="idadeBars"></div></section><section class="painel genero"><h3>Por gênero <small id="generoMes"></small></h3><div id="generoCards"></div></section></section><section class="grid-final"><section class="painel insights"><h3>Insights rápidos do mês</h3><ul id="insights"></ul></section><section class="painel recomendacoes"><h3>Recomendações do mês</h3><ul id="recomendacoes"></ul></section></section><footer><strong>Waves Plus</strong> + <strong>CBS</strong> = parceria que constrói resultados.</footer></main><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CBS Analytics Enterprise V4</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<main class="layout">
+  <aside class="sidebar">
+    <div class="brand-lockup">
+      <div class="waves-mini"><b>Waves</b><span>plus</span></div>
+      <div class="cbs-mini">CBS</div>
+    </div>
+    <h2>CBS Analytics</h2>
+    <button class="nav active" data-view="executivo">🏠 Diretoria</button>
+    <button class="nav" data-view="meta">📢 Meta Ads</button>
+    <button class="nav" data-view="sala">🏗 Sala de Guerra</button>
+    <button class="nav" data-view="pos">🚀 Pós-feira</button>
+    <button class="nav" data-view="crm">💼 CRM</button>
+    <button class="nav" data-view="apps">🤖 Apps</button>
+    <button class="nav" data-view="dados">⚙ Dados</button>
+    <div class="sidebar-foot">Waves Plus + CBS<br><b>Dados + Disciplina + Ação</b></div>
+  </aside>
+
+  <section class="content">
+    <header class="top">
+      <div>
+        <small id="eyebrow">Visão executiva</small>
+        <h1 id="title">Dashboard da Diretoria</h1>
+        <p id="subtitle">Operação pós-feira Expoconstruir 2026</p>
+      </div>
+      <div class="top-actions">
+        <select id="monthSelect"></select>
+        <button id="printBtn">📄 PDF</button>
+        <button id="themeBtn">🌙 Tema</button>
+      </div>
+    </header>
+
+    <section id="view-executivo" class="view active"></section>
+    <section id="view-meta" class="view"></section>
+    <section id="view-sala" class="view"></section>
+    <section id="view-pos" class="view"></section>
+    <section id="view-crm" class="view"></section>
+    <section id="view-apps" class="view"></section>
+    <section id="view-dados" class="view"></section>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
