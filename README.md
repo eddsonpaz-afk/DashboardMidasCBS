@@ -1,7 +1,5 @@
-# Dashboard Meta Ads, Waves Plus + CBS
+# Dashboard Meta Ads CBS/Waves - V2 Mensal
 
-Dashboard estático em HTML, CSS e JavaScript para GitHub Pages.
+Dados principais filtrados por mês. Comparativo mês a mês mantém sempre os últimos 3 meses.
 
-Publique na branch main e pasta /(root).
-
-Arquivos obrigatórios: index.html, estilos.css, app.js, data/meta-dashboard-data.json e .nojekyll.
+Suba todos os arquivos na raiz do repositório, mantendo a pasta data.
