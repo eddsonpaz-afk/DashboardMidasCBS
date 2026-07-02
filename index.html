@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Meta Ads | Waves Plus + CBS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="logo-card waves">Waves<br><span>plus</span><small>Eletrodos & abrasivos</small></div>
+        <div class="divider"></div>
+        <div class="logo-card cbs">CBS<small>IMPORTADORA<br>PARAFUSOS E PORCAS</small></div>
+      </div>
+      <div class="title-block">
+        <h1>DESEMPENHO DE CAMPANHAS <span>META ADS</span></h1>
+        <p>Análise mês a mês com funil, comparativos e recomendações</p>
+      </div>
+      <div class="actions">
+        <label class="upload-btn">
+          Atualizar planilha
+          <input id="xlsxInput" type="file" accept=".xlsx,.xls" />
+        </label>
+        <button id="exportBtn">Exportar JSON</button>
+      </div>
+    </header>
+
+    <section class="kpis" id="kpis"></section>
+
+    <main class="grid-dashboard">
+      <aside class="panel month-panel">
+        <div class="panel-head">
+          <h2>Desempenho do mês</h2>
+          <select id="monthSelect"></select>
+        </div>
+        <div id="selectedMonthMetrics" class="month-metrics"></div>
+        <div class="highlight-box" id="monthHighlight"></div>
+      </aside>
+
+      <section class="panel main-chart-panel">
+        <div class="panel-head">
+          <h2>Evolução dos principais indicadores</h2>
+          <span id="chartLabel"></span>
+        </div>
+        <canvas id="mainChart"></canvas>
+      </section>
+
+      <section class="panel funnel-panel">
+        <div class="panel-head">
+          <h2>Funil de resultados</h2>
+          <span>Geral</span>
+        </div>
+        <div id="funnel" class="funnel"></div>
+      </section>
+
+      <section class="panel compare-panel">
+        <div class="panel-head">
+          <h2>Comparativo mês a mês</h2>
+        </div>
+        <div class="table-wrap">
+          <table id="compareTable"></table>
+        </div>
+      </section>
+
+      <section class="panel campaigns-panel">
+        <div class="panel-head">
+          <h2>Campanhas do mês</h2>
+          <span id="campaignMonthLabel"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="campaignsTable"></table>
+        </div>
+      </section>
+
+      <section class="panel ranking-panel">
+        <div class="panel-head">
+          <h2>Ranking de campanhas</h2>
+          <span>IEC</span>
+        </div>
+        <div class="table-wrap">
+          <table id="rankingTable"></table>
+        </div>
+      </section>
+
+      <section class="panel age-panel">
+        <div class="panel-head">
+          <h2>Por idade</h2>
+          <span>CPA médio</span>
+        </div>
+        <canvas id="ageChart"></canvas>
+      </section>
+
+      <section class="panel gender-panel">
+        <div class="panel-head">
+          <h2>Por gênero</h2>
+          <span>Distribuição</span>
+        </div>
+        <canvas id="genderChart"></canvas>
+      </section>
+
+      <section class="panel insights-panel">
+        <div class="panel-head">
+          <h2>Insights rápidos</h2>
+        </div>
+        <ul id="insights"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <strong>WAVES PLUS + CBS</strong> = parceria que constrói resultados.
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
