@@ -1,5 +1,3 @@
-# CBS Analytics Enterprise V4
+# CBS Analytics V4.1
 
-Dashboard corporativo com Meta Ads, Sala de Guerra ExpoConstruir, Pós-feira, CRM e Apps.
-
-Suba todos os arquivos na raiz do repositório mantendo a pasta data.
+Duas abas: Meta Ads e Sala de Guerra. Ambas aceitam upload de planilha.

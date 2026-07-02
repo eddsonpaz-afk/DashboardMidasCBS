@@ -1,0 +1,96 @@
+{
+  "metas": {
+    "visitantes": 500,
+    "leads": 500,
+    "ligacoes": 400,
+    "reunioes": 40,
+    "oportunidades": 10,
+    "conversao": 20,
+    "faturamento": 1000000,
+    "apps": 200
+  },
+  "realizado": {
+    "visitantes": 0,
+    "leads": 0,
+    "ligacoes": 0,
+    "reunioes": 0,
+    "oportunidades": 0,
+    "conversao": 0,
+    "faturamento": 0,
+    "apps": 0
+  },
+  "vendedores": [
+    {
+      "nome": "Vendedor 01",
+      "leads": 0,
+      "ligacoes": 0,
+      "reunioes": 0,
+      "oportunidades": 0,
+      "faturamento": 0
+    },
+    {
+      "nome": "Vendedor 02",
+      "leads": 0,
+      "ligacoes": 0,
+      "reunioes": 0,
+      "oportunidades": 0,
+      "faturamento": 0
+    },
+    {
+      "nome": "Vendedor 03",
+      "leads": 0,
+      "ligacoes": 0,
+      "reunioes": 0,
+      "oportunidades": 0,
+      "faturamento": 0
+    },
+    {
+      "nome": "Vendedor 04",
+      "leads": 0,
+      "ligacoes": 0,
+      "reunioes": 0,
+      "oportunidades": 0,
+      "faturamento": 0
+    },
+    {
+      "nome": "Vendedor 05",
+      "leads": 0,
+      "ligacoes": 0,
+      "reunioes": 0,
+      "oportunidades": 0,
+      "faturamento": 0
+    }
+  ],
+  "apps": [
+    {
+      "nome": "Solda Certa",
+      "cadastros": 0
+    },
+    {
+      "nome": "Fixa Certo",
+      "cadastros": 0
+    },
+    {
+      "nome": "Andaime Certo",
+      "cadastros": 0
+    }
+  ],
+  "origem": [
+    {
+      "nome": "Estande / Contato direto",
+      "valor": 0
+    },
+    {
+      "nome": "QR Code",
+      "valor": 0
+    },
+    {
+      "nome": "Indicação",
+      "valor": 0
+    },
+    {
+      "nome": "Instagram",
+      "valor": 0
+    }
+  ]
+}
