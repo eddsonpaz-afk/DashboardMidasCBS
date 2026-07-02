@@ -77,7 +77,7 @@
   ],
   "origem": [
     {
-      "nome": "Estande / Contato direto",
+      "nome": "Estande / Contato Direto",
       "valor": 0
     },
     {
@@ -91,6 +91,22 @@
     {
       "nome": "Instagram",
       "valor": 0
+    }
+  ],
+  "oportunidades": [
+    {
+      "empresa": "Construtora Alfa",
+      "negocio": "Eletrodos OK 48.00",
+      "valor": 0,
+      "prob": 0,
+      "previsao": "D+15"
+    },
+    {
+      "empresa": "Metalúrgica Brasil",
+      "negocio": "Parafusos estruturais",
+      "valor": 0,
+      "prob": 0,
+      "previsao": "D+20"
     }
   ]
 }

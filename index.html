@@ -2,69 +2,147 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CBS Analytics | Meta Ads + Sala de Guerra</title>
-<link rel="stylesheet" href="estilos.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CBS Analytics V5</title>
+<link rel="stylesheet" href="css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-<main class="app">
-<nav class="tabs">
-<button class="tab active" data-tab="meta">📢 Meta Ads</button>
-<button class="tab" data-tab="expo">🏗️ Sala de Guerra</button>
-</nav>
+<main class="shell">
+  <nav class="module-tabs">
+    <button class="module-tab active" data-panel="meta">📢 Meta Ads</button>
+    <button class="module-tab" data-panel="war">🏗️ Sala de Guerra</button>
+  </nav>
 
-<header class="topo">
-<div class="brand waves"><b>Waves</b><span>plus</span><small>Eletrodos & abrasivos</small></div>
-<div class="title"><h1 id="pageTitle">Desempenho de Campanhas</h1><h2 id="pageSubtitle">Meta Ads</h2><p id="pageDesc">Análise mensal completa + comparativo dos últimos 3 meses</p></div>
-<div class="brand cbs"><b>CBS</b><span>Importadora</span><small>Parafusos e Porcas</small></div>
-</header>
+  <header class="hero">
+    <div class="logo-wrap">
+      <img src="assets/waves-logo.png" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="logo-fallback waves-fallback">Waves<br><span>plus</span></div>
+    </div>
+    <div class="hero-title">
+      <h1 id="mainTitle">DESEMPENHO DE CAMPANHAS</h1>
+      <h2 id="mainSub">META ADS</h2>
+      <p id="mainDesc">ANÁLISE COMPLETA • DADOS MENSAIS + COMPARATIVO DOS ÚLTIMOS 3 MESES</p>
+    </div>
+    <div class="logo-wrap">
+      <img src="assets/cbs-logo.png" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="logo-fallback cbs-fallback">CBS<br><span>Importadora</span></div>
+    </div>
+  </header>
 
-<section id="metaPanel">
-<div class="uploadBar">
-<label class="uploadBtn">📁 Subir planilha Meta Ads <input type="file" id="metaUpload" accept=".xlsx,.xls,.csv"></label>
-<button id="metaReset">↻ Voltar dados padrão</button>
-<select id="mesSelect"></select>
-</div>
-<section class="kpis" id="metaKpis"></section>
+  <section id="metaPanel" class="panel-view">
+    <div class="control-bar">
+      <label class="file-label">📁 Subir planilha Meta Ads <input id="metaUpload" type="file" accept=".xlsx,.xls,.csv"></label>
+      <select id="monthSelect"></select>
+      <button id="metaReset">↻ Dados padrão</button>
+      <button id="printMeta">📄 PDF</button>
+    </div>
 
-<section class="metaGrid">
-<div class="panel performance"><h3>Desempenho do mês</h3><div id="monthPerformance"></div></div>
-<div class="panel centerCharts"><h3>Evolução dos principais indicadores</h3><canvas id="evolucaoChart"></canvas><div id="campaignTable"></div></div>
-<div class="panel funnelPanel"><h3>Funil de resultados do mês</h3><div id="funnel"></div><div class="funnelObs" id="funnelObs"></div></div>
-</section>
+    <section id="metaKpis" class="kpi-row seven"></section>
 
-<section class="metaGrid2">
-<div class="panel"><h3>Ranking de campanhas por CPA</h3><div id="rankingCards"></div></div>
-<div class="panel"><h3>Por idade</h3><canvas id="idadeChart"></canvas></div>
-<div class="panel"><h3>Por gênero</h3><canvas id="generoChart"></canvas></div>
-<div class="panel insightsPanel"><h3>Insights rápidos</h3><ul id="insights"></ul><h3>Recomendações</h3><ul id="recomendacoes"></ul></div>
-</section>
+    <section class="meta-layout">
+      <aside class="card month-card">
+        <h3>📅 DESEMPENHO DO MÊS</h3>
+        <div id="monthMetrics"></div>
+        <div class="highlight" id="monthHighlight"></div>
+        <div class="mini-compare" id="miniCompare"></div>
+      </aside>
 
-<section class="panel compPanel"><h3>Comparativo mês a mês - últimos 3 meses</h3><div id="monthCompare"></div></section>
-</section>
+      <section class="card central-card">
+        <h3>EVOLUÇÃO DOS PRINCIPAIS INDICADORES</h3>
+        <div class="chart-area"><canvas id="mainBarChart"></canvas></div>
+        <div class="campaign-table" id="campaignTable"></div>
+      </section>
 
-<section id="expoPanel" class="hidden">
-<div class="uploadBar">
-<label class="uploadBtn">📁 Subir planilha Sala de Guerra <input type="file" id="expoUpload" accept=".xlsx,.xls,.csv"></label>
-<button id="expoReset">↻ Voltar zerado</button>
-<span class="note">Use a planilha modelo para alimentar leads, equipe, oportunidades, apps e origem.</span>
-</div>
-<section class="kpis" id="expoKpis"></section>
-<section class="warGrid">
-<div class="panel"><h3>Funil de conversão da feira</h3><div id="expoFunnel"></div></div>
-<div class="panel"><h3>Evolução e meta</h3><canvas id="expoMetaChart"></canvas></div>
-<div class="panel"><h3>Origem dos leads</h3><canvas id="expoOrigemChart"></canvas></div>
-</section>
-<section class="warGrid2">
-<div class="panel"><h3>Desempenho do time</h3><div id="teamTable"></div></div>
-<div class="panel"><h3>Apps demonstrados</h3><div id="appCards"></div></div>
-<div class="panel"><h3>Alertas e próximos passos</h3><ul id="warAlerts"></ul></div>
-</section>
-</section>
-<footer>Waves Plus + CBS = Dados, disciplina e ação para vender mais.</footer>
+      <aside class="card funnel-card">
+        <h3>FUNIL DE RESULTADOS DO MÊS</h3>
+        <div id="funnelResult"></div>
+        <div class="quick-insights">
+          <h3>INSIGHTS RÁPIDOS</h3>
+          <ul id="metaInsights"></ul>
+        </div>
+      </aside>
+    </section>
+
+    <section class="lower-layout">
+      <section class="card ranking-card">
+        <h3>RANKING DE CAMPANHAS POR CPA</h3>
+        <div id="rankingCampaigns"></div>
+      </section>
+
+      <section class="card age-card">
+        <h3>POR IDADE <span>(CPA MÉDIO)</span></h3>
+        <canvas id="ageChart"></canvas>
+      </section>
+
+      <section class="card gender-card">
+        <h3>POR GÊNERO</h3>
+        <canvas id="genderChart"></canvas>
+      </section>
+
+      <section class="card recommend-card">
+        <h3>RECOMENDAÇÕES PARA O PRÓXIMO MÊS</h3>
+        <ul id="metaRecommendations"></ul>
+      </section>
+    </section>
+
+    <section class="card compare-card">
+      <h3>COMPARATIVO MÊS A MÊS — ÚLTIMOS 3 MESES</h3>
+      <div id="monthCompare" class="month-compare-row"></div>
+    </section>
+  </section>
+
+  <section id="warPanel" class="panel-view hidden">
+    <div class="control-bar">
+      <label class="file-label">📁 Subir planilha Sala de Guerra <input id="expoUpload" type="file" accept=".xlsx,.xls,.csv"></label>
+      <button id="expoReset">↻ Zerar painel</button>
+      <button id="printExpo">📄 PDF</button>
+      <span class="soft-note">Alimente a planilha da feira quando a operação começar.</span>
+    </div>
+
+    <section id="warKpis" class="kpi-row six"></section>
+
+    <section class="war-layout">
+      <section class="card war-funnel">
+        <h3>FUNIL DE CONVERSÃO</h3>
+        <div id="warFunnel"></div>
+        <div class="goal-box" id="warGoal"></div>
+      </section>
+
+      <section class="card war-chart">
+        <h3>EVOLUÇÃO DA META</h3>
+        <canvas id="warMetaChart"></canvas>
+      </section>
+
+      <section class="card war-opps">
+        <h3>TOP OPORTUNIDADES</h3>
+        <div id="warOpportunities"></div>
+      </section>
+    </section>
+
+    <section class="war-lower">
+      <section class="card team-card">
+        <h3>DESEMPENHO DO TIME</h3>
+        <div id="teamTable"></div>
+      </section>
+      <section class="card">
+        <h3>ORIGEM DOS LEADS</h3>
+        <canvas id="originChart"></canvas>
+      </section>
+      <section class="card">
+        <h3>APPS DEMONSTRADOS</h3>
+        <div id="appCards"></div>
+      </section>
+      <section class="card">
+        <h3>ALERTAS E PRÓXIMOS PASSOS</h3>
+        <ul id="warAlerts"></ul>
+      </section>
+    </section>
+  </section>
+
+  <footer class="footer">WAVES PLUS + CBS = PARCERIA QUE CONSTRÓI RESULTADOS</footer>
 </main>
-<script src="app.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

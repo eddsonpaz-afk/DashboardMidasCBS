@@ -1,4 +1,5 @@
 {
+  "periodo": "Abril a Junho/2026",
   "meses": [
     {
       "mes": "Abril/2026",
@@ -186,6 +187,20 @@
       "cpc": 3.72,
       "cpm": 2.67,
       "iec": 73.0
+    },
+    {
+      "mes": "2026-06",
+      "nome": "Tráfego Andaime Whatsapp",
+      "investimento": 10.03,
+      "impressoes": 8791,
+      "alcance": 6354,
+      "cliques": 8,
+      "conversas": 1,
+      "cpa": 10.03,
+      "ctr": 0.09,
+      "cpc": 1.25,
+      "cpm": 1.14,
+      "iec": 53.2
     },
     {
       "mes": "2026-06",
@@ -391,18 +406,18 @@
     }
   ],
   "insights": [
-    "Junho foi o mês mais eficiente: aumentou o volume de conversas e reduziu o CPA.",
-    "Tráfego | Maio | Whatsapp é a campanha mais forte em consistência e volume comercial.",
-    "Andaime WhatsApp teve excelente CPA em maio e deve voltar para teste de escala.",
-    "Kits WhatsApp precisa ser reconstruída: tem clique, mas baixa conversão em conversa.",
-    "Campanhas de reconhecimento e vídeo devem ser tratadas como topo de funil, não como venda direta.",
-    "Para medir ROI financeiro real, conecte faturamento por campanha ou CRM/WhatsApp."
+    "Junho foi o mês mais eficiente: CPA menor e ROI operacional maior.",
+    "Tráfego | Maio | Whatsapp concentra o maior valor comercial e deve seguir ativo.",
+    "Andaime WhatsApp mostrou CPA muito competitivo em maio e merece novo teste de escala.",
+    "Kits WhatsApp precisa de nova oferta: gera clique, mas converte pouco em conversa.",
+    "Campanhas de reconhecimento e vídeo são topo de funil; não devem ser comparadas como venda direta.",
+    "Para ROAS real, conecte vendas por campanha ou CRM/WhatsApp."
   ],
   "recomendacoes": [
     "Escalar campanhas de WhatsApp com CPA abaixo da média do mês.",
-    "Recriar criativos de Kits com promessa mais direta e CTA forte para WhatsApp.",
-    "Manter campanhas de volume enquanto CPA ficar abaixo de R$ 7.",
-    "Criar remarketing para quem engajou com vídeo/reconhecimento.",
+    "Recriar Kits com promessa direta, preço claro e CTA para WhatsApp.",
+    "Separar campanhas por objetivo: reconhecimento, tráfego e conversa.",
+    "Criar remarketing dos engajados de vídeo/reconhecimento.",
     "Padronizar nomes: MÊS | OBJETIVO | PRODUTO | CANAL."
   ]
 }
