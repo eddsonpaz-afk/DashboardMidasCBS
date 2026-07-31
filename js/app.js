@@ -1,22 +1,32 @@
 const brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const num=new Intl.NumberFormat('pt-BR');
+const percentNumber=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const $=id=>document.getElementById(id);
 const money=v=>brl.format(Number(v||0));
 const number=v=>num.format(Math.round(Number(v||0)));
-const pct=v=>`${Number(v||0).toFixed(2).replace('.',',')}%`;
+const pct=v=>`${percentNumber.format(Number(v||0))}%`;
+const hasValue=v=>MidasMetaParser.hasValue(v);
+const moneyMaybe=v=>hasValue(v)?money(v):'Não informado';
+const numberMaybe=v=>hasValue(v)?number(v):'Não informado';
+const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
+const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
 let META, EXPO, charts={};
 
 Promise.all([
   fetch('data/meta-dashboard-data.json').then(r=>r.json()),
   fetch('data/expo-dashboard-data.json').then(r=>r.json())
-]).then(([m,e])=>{META=m;EXPO=e;init();});
+]).then(([m,e])=>{META=MidasMetaParser.normalizeMetaData(m);EXPO=e;init();});
+
+function refreshMonthSelect(selected){
+  $('monthSelect').innerHTML=META.meses.map(m=>`<option value="${m.chave}">${m.mes}</option>`).join('');
+  $('monthSelect').value=selected&&META.meses.some(m=>m.chave===selected)?selected:META.meses[META.meses.length-1].chave;
+}
 
 function init(){
   document.querySelectorAll('.module-tab').forEach(btn=>{
     btn.onclick=()=>switchPanel(btn.dataset.panel);
   });
-  $('monthSelect').innerHTML=META.meses.map(m=>`<option value="${m.chave}">${m.mes}</option>`).join('');
-  $('monthSelect').value=META.meses[META.meses.length-1].chave;
+  refreshMonthSelect();
   $('monthSelect').onchange=()=>renderMeta($('monthSelect').value);
   $('metaUpload').onchange=e=>readMetaFile(e.target.files[0]);
   $('expoUpload').onchange=e=>readExpoFile(e.target.files[0]);
@@ -45,11 +55,15 @@ function switchPanel(panel){
 
 function renderMeta(key){
   const m=META.meses.find(x=>x.chave===key);
+  if(!m)return;
   const prev=META.meses[META.meses.findIndex(x=>x.chave===key)-1];
   const campaigns=META.campanhas.filter(c=>c.mes===key).sort((a,b)=>b.conversas-a.conversas);
 
   $('metaKpis').innerHTML=[
     ['💰','Investimento total',money(m.investimento),'Mês selecionado'],
+    ['💵','Vendas do mês',moneyMaybe(m.vendas),'Receita atribuída'],
+    ['📈','ROI do mês',pctMaybe(m.roi),'Retorno líquido sobre o investimento'],
+    ['🚀','ROAS do mês',multipleMaybe(m.roas),'Receita por real investido'],
     ['💬','Conversas iniciadas',number(m.conversas),'WhatsApp'],
     ['🔗','Cliques no link',number(m.cliques),'Estimado'],
     ['👁️','Impressões',number(m.impressoes),'Volume'],
@@ -60,6 +74,11 @@ function renderMeta(key){
 
   $('monthMetrics').innerHTML=[
     ['💰','Investimento',money(m.investimento),'investimento',true],
+    ['💵','Vendas',moneyMaybe(m.vendas),'vendas'],
+    ['📈','ROI',pctMaybe(m.roi),'roi'],
+    ['🚀','ROAS',multipleMaybe(m.roas),'roas'],
+    ['🧲','Leads trabalhados',numberMaybe(m.leadsTrabalhados),'leadsTrabalhados'],
+    ['👤','Seguidores',numberMaybe(m.seguidores),'seguidores'],
     ['👁️','Impressões',number(m.impressoes),'impressoes'],
     ['👥','Alcance',number(m.alcance),'alcance'],
     ['🔗','Cliques no link',number(m.cliques),'cliques'],
@@ -70,7 +89,9 @@ function renderMeta(key){
     ['🎯','Frequência',Number(m.frequencia||0).toFixed(2).replace('.',','),'frequencia',true]
   ].map(row=>metricRow(row,prev)).join('');
 
-  $('monthHighlight').innerHTML=`🏆 <strong>Destaque do mês:</strong> CPA de ${money(m.cpa)} com ${number(m.conversas)} conversas iniciadas.`;
+  $('monthHighlight').innerHTML=hasValue(m.vendas)
+    ?`🏆 <strong>Resultado comercial:</strong> ${money(m.vendas)} em vendas, ROAS de ${multipleMaybe(m.roas)} e ROI de ${pctMaybe(m.roi)}.`
+    :`🏆 <strong>Destaque do mês:</strong> CPA de ${money(m.cpa)} com ${number(m.conversas)} conversas iniciadas. Vendas ainda não informadas.`;
   $('miniCompare').innerHTML=miniCompareTable();
   renderFunnel(m);
   renderCampaignTable(campaigns,m);
@@ -79,9 +100,13 @@ function renderMeta(key){
   $('metaInsights').innerHTML=META.insights.map(x=>`<li>${x}</li>`).join('');
   $('metaRecommendations').innerHTML=META.recomendacoes.map(x=>`<li>${x}</li>`).join('');
 
+  const chartMonths=META.meses.slice(-4);
   makeChart('mainBarChart','bar',
-    ['Impressões','Cliques','Conversas','Investimento'],
-    [{label:m.mes,data:[m.impressoes,m.cliques,m.conversas,m.investimento],backgroundColor:['#2563eb','#a855f7','#22c55e','#f97316']}],
+    chartMonths.map(item=>item.mes.split('/')[0]),
+    [
+      {label:'Investimento',data:chartMonths.map(item=>item.investimento),backgroundColor:'#f97316'},
+      {label:'Vendas',data:chartMonths.map(item=>hasValue(item.vendas)?item.vendas:0),backgroundColor:'#22c55e'}
+    ],
     false
   );
 
@@ -97,12 +122,12 @@ function kpiCard([icon,label,value,small]){
 }
 
 function metricRow([icon,label,value,field,invert],prev){
-  const t=prev?trend(valueToNumber(value),Number(prev[field]||0),invert):'';
+  const t=prev&&hasValue(value)&&hasValue(prev[field])?trend(valueToNumber(value),Number(prev[field]),invert):'';
   return `<div class="metric-row"><div class="mi">${icon}</div><div><span>${label}</span><b>${value}</b></div><small>${t}</small></div>`;
 }
 
 function valueToNumber(v){
-  return Number(String(v).replace('R$','').replace('%','').replace(/\./g,'').replace(',','.'))||0;
+  return MidasMetaParser.toNumber(String(v).replace(/x$/i,''))||0;
 }
 
 function trend(curr,prev,invert=false){
@@ -121,10 +146,14 @@ function renderFunnel(m){
       <div class="funnel-step"><span>Cliques • ${pct(clickRate)}</span><b>${number(m.cliques)}</b></div>
       <div class="funnel-step"><span>Conversas • ${pct(convRate)}</span><b>${number(m.conversas)}</b></div>
       <div class="funnel-step"><span>CPA</span><b>${money(m.cpa)}</b></div>
+      ${hasValue(m.vendas)?`<div class="funnel-step"><span>Vendas do mês</span><b>${money(m.vendas)}</b></div>`:''}
     </div>
     <div class="funnel-note">
       Leitura correta: cliques são ${pct(clickRate)} das impressões; conversas são ${pct(convRate)} dos cliques.
-      ROI operacional: ${Number(m.roiOperacional||0).toFixed(3).replace('.',',')} conversas por real investido.
+      ${hasValue(m.vendas)
+        ?`Retorno financeiro: ROAS de ${multipleMaybe(m.roas)} e ROI de ${pctMaybe(m.roi)}.`
+        :'Informe a venda do mês na planilha para o dashboard calcular ROI e ROAS.'}
+      Eficiência operacional: ${Number(m.roiOperacional||0).toFixed(3).replace('.',',')} conversas por real investido.
     </div>`;
 }
 
@@ -166,7 +195,11 @@ function renderCompare(){
       ${compareLine('CPA',money(m.cpa))}
       ${compareLine('CTR',pct(m.ctr))}
       ${compareLine('CPC',money(m.cpc))}
-      <div class="compare-roi">Conversas/R$ ${Number(m.roiOperacional||0).toFixed(3).replace('.',',')}</div>
+      ${compareLine('Vendas',moneyMaybe(m.vendas))}
+      ${compareLine('ROI',pctMaybe(m.roi))}
+      ${compareLine('ROAS',multipleMaybe(m.roas))}
+      ${hasValue(m.leadsTrabalhados)?compareLine('Leads trabalhados',number(m.leadsTrabalhados)):''}
+      <div class="compare-roi">ROAS ${multipleMaybe(m.roas)}<small>ROI ${pctMaybe(m.roi)}</small></div>
     </div>`).join('');
 }
 
@@ -175,12 +208,18 @@ function compareLine(a,b){return `<div class="compare-line"><span>${a}</span><b>
 function miniCompareTable(){
   return `<table class="table"><thead><tr><th>Indicador</th>${META.meses.slice(-3).map(m=>`<th>${m.mes.split('/')[0]}</th>`).join('')}</tr></thead>
     <tbody>
-      ${['investimento','impressoes','cliques','conversas','cpa','ctr','cpc'].map(k=>`<tr><td>${label(k)}</td>${META.meses.slice(-3).map(m=>`<td>${format(k,m[k])}</td>`).join('')}</tr>`).join('')}
+      ${['investimento','vendas','roi','roas','impressoes','cliques','conversas','cpa','ctr','cpc'].map(k=>`<tr><td>${label(k)}</td>${META.meses.slice(-3).map(m=>`<td>${format(k,m[k])}</td>`).join('')}</tr>`).join('')}
     </tbody></table>`;
 }
 
-function label(k){return {investimento:'Invest.',impressoes:'Impress.',cliques:'Cliques',conversas:'Conversas',cpa:'CPA',ctr:'CTR',cpc:'CPC'}[k]||k}
-function format(k,v){return ['investimento','cpa','cpc'].includes(k)?money(v):k==='ctr'?pct(v):number(v)}
+function label(k){return {investimento:'Invest.',vendas:'Vendas',roi:'ROI',roas:'ROAS',impressoes:'Impress.',cliques:'Cliques',conversas:'Conversas',cpa:'CPA',ctr:'CTR',cpc:'CPC'}[k]||k}
+function format(k,v){
+  if(!hasValue(v))return '–';
+  if(['investimento','vendas','cpa','cpc'].includes(k))return money(v);
+  if(['ctr','roi'].includes(k))return pct(v);
+  if(k==='roas')return multipleMaybe(v);
+  return number(v);
+}
 
 function renderExpo(){
   const r=EXPO.realizado, meta=EXPO.metas;
@@ -232,16 +271,27 @@ function makeChart(id,type,labels,datasets,noScales=false){
 
 async function readMetaFile(file){
   if(!file)return;
-  const wb=await readWorkbook(file);
-  const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
-  const parsed=parseMeta(rows);
-  if(parsed.meses.length){
-    META={...META,...parsed,insights:META.insights,recomendacoes:META.recomendacoes};
-    $('monthSelect').innerHTML=META.meses.map(m=>`<option value="${m.chave}">${m.mes}</option>`).join('');
-    $('monthSelect').value=META.meses[META.meses.length-1].chave;
+  const status=$('metaUploadStatus');
+  status.className='upload-status';
+  status.textContent='Lendo e validando a planilha...';
+  try{
+    const wb=await readWorkbook(file);
+    const parsed=MidasMetaParser.parseMetaWorkbook(wb,XLSX);
+    if(!parsed.meses.length)throw new Error('não encontrei uma aba mensal nem uma exportação válida do Meta Ads');
+    META=MidasMetaParser.mergeMetaData(META,parsed);
+    refreshMonthSelect(META.meses[META.meses.length-1].chave);
     renderMeta($('monthSelect').value);
-    alert('Planilha Meta Ads importada com sucesso!');
-  }else alert('Não consegui identificar os meses da planilha.');
+    status.className='upload-status success';
+    status.textContent=`Importado: ${parsed.meses.length} mês(es) • abas ${parsed.sourceSheets.join(', ')||'identificadas automaticamente'}.`;
+    alert(`Planilha importada com sucesso!\n${parsed.meses.length} mês(es) reconhecido(s).\nVendas, ROI e ROAS foram atualizados.`);
+  }catch(error){
+    console.error(error);
+    status.className='upload-status error';
+    status.textContent=`Erro: ${error.message}`;
+    alert(`Não consegui importar a planilha.\n${error.message}`);
+  }finally{
+    $('metaUpload').value='';
+  }
 }
 
 async function readExpoFile(file){
@@ -252,35 +302,8 @@ async function readExpoFile(file){
   alert('Planilha Sala de Guerra importada com sucesso!');
 }
 
-function readWorkbook(file){return file.arrayBuffer().then(b=>XLSX.read(b,{type:'array'}))}
-function n(v){if(typeof v==='number')return v;return Number(String(v||'').replace('R$','').replace('%','').replace(/\./g,'').replace(',','.'))||0}
-function key(raw){const m=String(raw||'').match(/(20\d{2})-(\d{2})/);return m?`${m[1]}-${m[2]}`:''}
-
-function parseMeta(rows){
-  const g={};
-  rows.forEach(r=>{
-    const k=key(r['Mês']||r['Início dos relatórios']||'');
-    if(!k)return;
-    if(!g[k])g[k]={spend:0,impr:0,reach:0,clicks:0,conv:0,camps:{}};
-    const spend=n(r['Valor usado (BRL)']);
-    const impr=n(r['Impressões']);
-    const reach=n(r['Alcance']);
-    const tipo=String(r['Tipo de resultado']||'');
-    const res=n(r['Resultados']);
-    const cpc=n(r['CPC (custo por clique no link)']);
-    const clicks=tipo.includes('Cliques')?res:(cpc?spend/cpc:0);
-    const conv=tipo.includes('Conversas')?res:0;
-    g[k].spend+=spend;g[k].impr+=impr;g[k].reach+=reach;g[k].clicks+=clicks;g[k].conv+=conv;
-    const camp=r['Nome da campanha']||'Sem campanha';
-    if(!g[k].camps[camp])g[k].camps[camp]={spend:0,impr:0,reach:0,clicks:0,conv:0};
-    g[k].camps[camp].spend+=spend;g[k].camps[camp].impr+=impr;g[k].camps[camp].reach+=reach;g[k].camps[camp].clicks+=clicks;g[k].camps[camp].conv+=conv;
-  });
-  const keys=Object.keys(g).sort();
-  const meses=keys.map(k=>({mes:k,chave:k,investimento:g[k].spend,impressoes:g[k].impr,alcance:g[k].reach,cliques:Math.round(g[k].clicks),conversas:g[k].conv,cpa:g[k].conv?g[k].spend/g[k].conv:0,ctr:g[k].impr?g[k].clicks/g[k].impr*100:0,cpc:g[k].clicks?g[k].spend/g[k].clicks:0,cpm:g[k].impr?g[k].spend/g[k].impr*1000:0,frequencia:g[k].reach?g[k].impr/g[k].reach:0,roiOperacional:g[k].spend?g[k].conv/g[k].spend:0}));
-  const campanhas=[];
-  keys.forEach(k=>Object.entries(g[k].camps).forEach(([nome,v])=>campanhas.push({mes:k,nome,investimento:v.spend,impressoes:v.impr,alcance:v.reach,cliques:Math.round(v.clicks),conversas:v.conv,cpa:v.conv?v.spend/v.conv:0,ctr:v.impr?v.clicks/v.impr*100:0,cpc:v.clicks?v.spend/v.clicks:0,cpm:v.impr?v.spend/v.impr*1000:0,iec:Math.round((v.conv*5)+(v.clicks?20:0))})));
-  return {meses,campanhas,idade:META.idade,genero:META.genero};
-}
+function readWorkbook(file){return file.arrayBuffer().then(b=>XLSX.read(b,{type:'array',cellDates:true}))}
+function n(v){return MidasMetaParser.toNumber(v)||0}
 
 function parseExpo(wb){
   const e=JSON.parse(JSON.stringify(EXPO));
