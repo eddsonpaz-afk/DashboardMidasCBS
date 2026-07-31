@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="js/meta-parser.js"></script>
 </head>
 <body>
 <main class="shell">
@@ -34,12 +35,13 @@
   <section id="metaPanel" class="panel-view">
     <div class="control-bar">
       <label class="file-label">📁 Subir planilha Meta Ads <input id="metaUpload" type="file" accept=".xlsx,.xls,.csv"></label>
+      <span id="metaUploadStatus" class="upload-status">Pronto para importar Excel ou CSV.</span>
       <select id="monthSelect"></select>
       <button id="metaReset">↻ Dados padrão</button>
       <button id="printMeta">📄 PDF</button>
     </div>
 
-    <section id="metaKpis" class="kpi-row seven"></section>
+    <section id="metaKpis" class="kpi-row meta-kpis"></section>
 
     <section class="meta-layout">
       <aside class="card month-card">
