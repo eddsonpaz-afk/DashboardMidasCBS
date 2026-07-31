@@ -1,5 +1,5 @@
 {
-  "periodo": "Abril a Junho/2026",
+  "periodo": "Abril a Julho/2026",
   "meses": [
     {
       "mes": "Abril/2026",
@@ -14,7 +14,10 @@
       "cpc": 1.69,
       "cpm": 11.71,
       "frequencia": 1.54,
-      "roiOperacional": 0.027
+      "roiOperacional": 0.027,
+      "seguidores": null,
+      "vendas": null,
+      "leadsTrabalhados": null
     },
     {
       "mes": "Maio/2026",
@@ -29,7 +32,10 @@
       "cpc": 1.05,
       "cpm": 1.76,
       "frequencia": 1.72,
-      "roiOperacional": 0.091
+      "roiOperacional": 0.091,
+      "seguidores": null,
+      "vendas": null,
+      "leadsTrabalhados": null
     },
     {
       "mes": "Junho/2026",
@@ -44,7 +50,28 @@
       "cpc": 1.15,
       "cpm": 2.27,
       "frequencia": 1.5,
-      "roiOperacional": 0.11
+      "roiOperacional": 0.11,
+      "seguidores": null,
+      "vendas": 13681.31,
+      "leadsTrabalhados": null
+    },
+    {
+      "mes": "Julho/2026",
+      "chave": "2026-07",
+      "investimento": 658.69,
+      "impressoes": 71713,
+      "alcance": 42385,
+      "cliques": 556,
+      "conversas": 110,
+      "cpa": 5.99,
+      "ctr": 0.78,
+      "cpc": 1.18,
+      "cpm": 9.19,
+      "frequencia": 1.69,
+      "roiOperacional": 0.167,
+      "seguidores": 53936,
+      "vendas": 15633.25,
+      "leadsTrabalhados": 122
     }
   ],
   "campanhas": [
@@ -144,7 +171,7 @@
       "ctr": 0.36,
       "cpc": 0.46,
       "cpm": 1.64,
-      "iec": 35.0
+      "iec": 35
     },
     {
       "mes": "2026-05",
@@ -186,7 +213,7 @@
       "ctr": 0.07,
       "cpc": 3.72,
       "cpm": 2.67,
-      "iec": 73.0
+      "iec": 73
     },
     {
       "mes": "2026-06",
@@ -243,6 +270,48 @@
       "cpc": 1.31,
       "cpm": 26.29,
       "iec": 21.5
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Tráfego | Julho | Prod Tem",
+      "investimento": 307.33,
+      "impressoes": 32855,
+      "alcance": 19769,
+      "cliques": 219,
+      "conversas": 44,
+      "cpa": 6.98,
+      "ctr": 0.67,
+      "cpc": 1.4,
+      "cpm": 9.35,
+      "iec": 0
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Tráfego | Maio | Whatsapp",
+      "investimento": 202.98,
+      "impressoes": 20002,
+      "alcance": 12187,
+      "cliques": 183,
+      "conversas": 38,
+      "cpa": 5.34,
+      "ctr": 0.91,
+      "cpc": 1.11,
+      "cpm": 10.15,
+      "iec": 0
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Tráfego Andaime Whatsapp",
+      "investimento": 148.38,
+      "impressoes": 18856,
+      "alcance": 10429,
+      "cliques": 154,
+      "conversas": 28,
+      "cpa": 5.3,
+      "ctr": 0.82,
+      "cpc": 0.96,
+      "cpm": 7.87,
+      "iec": 0
     }
   ],
   "idade": [
@@ -347,6 +416,36 @@
       "faixa": "65+",
       "cpa": 8.31,
       "conversas": 3
+    },
+    {
+      "mes": "2026-07",
+      "faixa": "25-34",
+      "cpa": 5.77,
+      "conversas": 30
+    },
+    {
+      "mes": "2026-07",
+      "faixa": "35-44",
+      "cpa": 5.8,
+      "conversas": 37
+    },
+    {
+      "mes": "2026-07",
+      "faixa": "45-54",
+      "cpa": 5.35,
+      "conversas": 25
+    },
+    {
+      "mes": "2026-07",
+      "faixa": "55-64",
+      "cpa": 5.35,
+      "conversas": 13
+    },
+    {
+      "mes": "2026-07",
+      "faixa": "65+",
+      "cpa": 8.43,
+      "conversas": 5
     }
   ],
   "genero": [
@@ -403,15 +502,33 @@
       "nome": "Indefinido",
       "participacao": 4.3,
       "cpa": 9.21
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Masculino",
+      "participacao": 74.82,
+      "cpa": 5.13
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Feminino",
+      "participacao": 10.46,
+      "cpa": 14.92
+    },
+    {
+      "mes": "2026-07",
+      "nome": "Indefinido",
+      "participacao": 14.72,
+      "cpa": 0
     }
   ],
   "insights": [
-    "Junho foi o mês mais eficiente: CPA menor e ROI operacional maior.",
+    "Julho foi o mês mais eficiente: CPA de R$ 5,99, vendas de R$ 15.633,25 e ROAS de 23,73x.",
+    "As vendas cresceram 14,27% de junho para julho.",
     "Tráfego | Maio | Whatsapp concentra o maior valor comercial e deve seguir ativo.",
-    "Andaime WhatsApp mostrou CPA muito competitivo em maio e merece novo teste de escala.",
-    "Kits WhatsApp precisa de nova oferta: gera clique, mas converte pouco em conversa.",
-    "Campanhas de reconhecimento e vídeo são topo de funil; não devem ser comparadas como venda direta.",
-    "Para ROAS real, conecte vendas por campanha ou CRM/WhatsApp."
+    "Andaime WhatsApp mostrou CPA competitivo e merece novo teste de escala.",
+    "Em julho, Prod Tem liderou o volume com 44 conversas.",
+    "Campanhas de reconhecimento e vídeo são topo de funil; não devem ser comparadas como venda direta."
   ],
   "recomendacoes": [
     "Escalar campanhas de WhatsApp com CPA abaixo da média do mês.",
@@ -421,3 +538,4 @@
     "Padronizar nomes: MÊS | OBJETIVO | PRODUTO | CANAL."
   ]
 }
+
