@@ -36,12 +36,13 @@ async function loadGoogleSheetSummary(){
   if(!response.ok)throw new Error('base não publicada');
   const csv=await response.text();
   if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
-  const wb=XLSX.read(csv,{type:'string'});
-  const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+  const grid=parseCsv(csv);
+  const headers=grid.shift()||[];
+  const rows=grid.map(values=>Object.fromEntries(headers.map((header,index)=>[header,values[index]??''])));
   const value=(row,name)=>row[name];
   const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
-  const meses=rows.filter(row=>value(row,'Chave')).map(row=>({
-    mes:value(row,'Mês'),chave:String(value(row,'Chave')).trim(),
+  const meses=rows.filter(row=>value(row,'Mês')).map(row=>({
+    mes:value(row,'Mês'),chave:MidasMetaParser.monthKey(value(row,'Mês'))||String(value(row,'Chave')).trim(),
     investimento:maybe(value(row,'Investimento')),impressoes:maybe(value(row,'Impressões')),
     alcance:maybe(value(row,'Alcance')),cliques:maybe(value(row,'Cliques')),
     conversas:maybe(value(row,'Conversas')),cpa:maybe(value(row,'CPA')),
@@ -51,6 +52,24 @@ async function loadGoogleSheetSummary(){
   }));
   if(!meses.length)throw new Error('nenhum mês encontrado');
   return {meses,campanhas:[],idade:[],genero:[],insights:[],recomendacoes:[],sourceSheets:['Google Sheets']};
+}
+
+function parseCsv(text){
+  const rows=[];
+  let row=[],cell='',quoted=false;
+  for(let i=0;i<text.length;i++){
+    const char=text[i];
+    if(char==='"'){
+      if(quoted&&text[i+1]==='"'){cell+='"';i++;}
+      else quoted=!quoted;
+    }else if(char===','&&!quoted){row.push(cell);cell='';}
+    else if((char==='\\n'||char==='\\r')&&!quoted){
+      if(char==='\\r'&&text[i+1]==='\\n')i++;
+      row.push(cell);rows.push(row);row=[];cell='';
+    }else cell+=char;
+  }
+  if(cell||row.length){row.push(cell);rows.push(row);}
+  return rows;
 }
 
 function refreshMonthSelect(selected){
