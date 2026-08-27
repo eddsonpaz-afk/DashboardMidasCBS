@@ -41,57 +41,94 @@
       <button id="printMeta">📄 PDF</button>
     </div>
 
-    <section id="metaKpis" class="kpi-row meta-kpis"></section>
-
-    <section class="meta-layout">
-      <aside class="card month-card">
-        <h3>📅 DESEMPENHO DO MÊS</h3>
-        <div id="monthMetrics"></div>
-        <div class="highlight" id="monthHighlight"></div>
-        <div class="mini-compare" id="miniCompare"></div>
-      </aside>
-
-      <section class="card central-card">
-        <h3>EVOLUÇÃO DOS PRINCIPAIS INDICADORES</h3>
-        <div class="chart-area"><canvas id="mainBarChart"></canvas></div>
-        <div class="campaign-table" id="campaignTable"></div>
-      </section>
-
-      <aside class="card funnel-card">
-        <h3>FUNIL DE RESULTADOS DO MÊS</h3>
-        <div id="funnelResult"></div>
-        <div class="quick-insights">
-          <h3>INSIGHTS RÁPIDOS</h3>
-          <ul id="metaInsights"></ul>
+    <div class="midas-glass-stack">
+      <section class="glass-deck executive-deck">
+        <div class="deck-heading"><span>01</span><div><b>VISÃO EXECUTIVA</b><small>Marketing e vendas do mês</small></div></div>
+        <section id="executiveKpis" class="executive-kpis"></section>
+        <div class="executive-visuals">
+          <section class="embedded-chart">
+            <h3>EVOLUÇÃO MENSAL</h3>
+            <div class="chart-area"><canvas id="mainBarChart"></canvas></div>
+          </section>
+          <section class="efficiency-panel">
+            <h3>EFICIÊNCIA</h3>
+            <div class="efficiency-wrap">
+              <canvas id="efficiencyChart"></canvas>
+              <div id="efficiencyValue" class="efficiency-value"></div>
+            </div>
+          </section>
         </div>
-      </aside>
-    </section>
-
-    <section class="lower-layout">
-      <section class="card ranking-card">
-        <h3>RANKING DE CAMPANHAS POR CPA</h3>
-        <div id="rankingCampaigns"></div>
       </section>
 
-      <section class="card age-card">
-        <h3>POR IDADE <span>(CPA MÉDIO)</span></h3>
-        <canvas id="ageChart"></canvas>
+      <div class="glass-bridge"></div>
+
+      <section class="glass-deck flow-deck">
+        <div class="deck-heading"><span>02</span><div><b>FUNIL DE PERFORMANCE</b><small>Da impressão à conversa</small></div></div>
+        <section id="channelKpis" class="channel-kpis"></section>
+        <div class="flow-content">
+          <div id="funnelResult"></div>
+          <aside class="flow-insights">
+            <h3>INSIGHTS RÁPIDOS</h3>
+            <ul id="metaInsights"></ul>
+          </aside>
+        </div>
       </section>
 
-      <section class="card gender-card">
-        <h3>POR GÊNERO</h3>
-        <canvas id="genderChart"></canvas>
+      <div class="glass-bridge"></div>
+
+      <section class="glass-deck commercial-deck">
+        <div class="deck-heading"><span>03</span><div><b>VISÃO COMERCIAL</b><small>Leads, audiência e vendas</small></div></div>
+        <div class="commercial-grid">
+          <section id="commercialKpis" class="commercial-kpis"></section>
+          <section class="sales-chart-panel">
+            <h3>COMPARATIVO DE VENDAS</h3>
+            <div class="chart-area"><canvas id="salesCompareChart"></canvas></div>
+          </section>
+          <section id="salesMonthCards" class="sales-month-cards"></section>
+        </div>
+      </section>
+    </div>
+
+    <section class="detail-section">
+      <div class="detail-title"><span>ANÁLISE COMPLETA</span><small>Detalhamento do mês selecionado</small></div>
+      <section class="detail-grid">
+        <aside class="card month-card">
+          <h3>DESEMPENHO DO MÊS</h3>
+          <div id="monthMetrics"></div>
+          <div class="highlight" id="monthHighlight"></div>
+          <div class="mini-compare" id="miniCompare"></div>
+        </aside>
+
+        <section class="card campaign-detail-card">
+          <h3>DESEMPENHO POR CAMPANHA</h3>
+          <div class="campaign-table" id="campaignTable"></div>
+        </section>
+
+        <section class="card ranking-card">
+          <h3>RANKING DE CAMPANHAS POR CPA</h3>
+          <div id="rankingCampaigns"></div>
+        </section>
+
+        <section class="card age-card">
+          <h3>POR IDADE <span>(CPA MÉDIO)</span></h3>
+          <canvas id="ageChart"></canvas>
+        </section>
+
+        <section class="card gender-card">
+          <h3>POR GÊNERO</h3>
+          <canvas id="genderChart"></canvas>
+        </section>
+
+        <section class="card recommend-card">
+          <h3>RECOMENDAÇÕES PARA O PRÓXIMO MÊS</h3>
+          <ul id="metaRecommendations"></ul>
+        </section>
       </section>
 
-      <section class="card recommend-card">
-        <h3>RECOMENDAÇÕES PARA O PRÓXIMO MÊS</h3>
-        <ul id="metaRecommendations"></ul>
+      <section class="card compare-card">
+        <h3>COMPARATIVO MÊS A MÊS — ÚLTIMOS 3 MESES</h3>
+        <div id="monthCompare" class="month-compare-row"></div>
       </section>
-    </section>
-
-    <section class="card compare-card">
-      <h3>COMPARATIVO MÊS A MÊS — ÚLTIMOS 3 MESES</h3>
-      <div id="monthCompare" class="month-compare-row"></div>
     </section>
   </section>
 
