@@ -1,5 +1,5 @@
 {
-  "periodo": "Abril a Julho/2026",
+  "periodo": "Abril a Agosto/2026",
   "meses": [
     {
       "mes": "Abril/2026",
@@ -15,7 +15,7 @@
       "cpm": 11.71,
       "frequencia": 1.54,
       "roiOperacional": 0.027,
-      "seguidores": null,
+      "seguidores": 54523,
       "vendas": null,
       "leadsTrabalhados": null
     },
@@ -72,6 +72,24 @@
       "seguidores": 53936,
       "vendas": 15633.25,
       "leadsTrabalhados": 122
+    },
+    {
+      "mes": "Agosto/2026",
+      "chave": "2026-08",
+      "investimento": 560.94,
+      "impressoes": 59935,
+      "alcance": 41788,
+      "cliques": 568,
+      "conversas": 117,
+      "cpa": 4.79,
+      "ctr": 0.95,
+      "cpc": 0.99,
+      "cpm": 9.36,
+      "frequencia": 1.43,
+      "roiOperacional": 0.209,
+      "seguidores": 57793,
+      "vendas": 6571,
+      "leadsTrabalhados": 252
     }
   ],
   "campanhas": [
@@ -523,12 +541,12 @@
     }
   ],
   "insights": [
-    "Julho foi o mês mais eficiente: CPA de R$ 5,99, vendas de R$ 15.633,25 e ROAS de 23,73x.",
+    "Agosto registrou 252 leads trabalhados, 117 conversas e CPA de R$ 4,79.",
+    "O ROI de agosto foi de 1.071,43% e o ROAS de 11,71x: retorno financeiro excelente.",
+    "A audiência chegou a 57.793 seguidores em agosto.",
     "As vendas cresceram 14,27% de junho para julho.",
     "Tráfego | Maio | Whatsapp concentra o maior valor comercial e deve seguir ativo.",
-    "Andaime WhatsApp mostrou CPA competitivo e merece novo teste de escala.",
-    "Em julho, Prod Tem liderou o volume com 44 conversas.",
-    "Campanhas de reconhecimento e vídeo são topo de funil; não devem ser comparadas como venda direta."
+    "Andaime WhatsApp mostrou CPA competitivo e merece novo teste de escala."
   ],
   "recomendacoes": [
     "Escalar campanhas de WhatsApp com CPA abaixo da média do mês.",
@@ -538,4 +556,3 @@
     "Padronizar nomes: MÊS | OBJETIVO | PRODUTO | CANAL."
   ]
 }
-
