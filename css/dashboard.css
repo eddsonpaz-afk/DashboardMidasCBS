@@ -744,3 +744,8 @@ canvas{filter:saturate(.92)}
   .hero-title h1{font-size:16px}
   .hero-title h2{font-size:15px}
 }
+
+/* Header logo containment */
+.logo-wrap{overflow:hidden}
+.logo-wrap img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain}
+@media(max-width:720px){.logo-wrap img{width:100%;height:100%}}
