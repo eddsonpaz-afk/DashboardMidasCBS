@@ -37,7 +37,7 @@ async function loadGoogleSheetSummary(){
   const csv=await response.text();
   if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
   const grid=parseCsv(csv);
-  const headers=grid.shift()||[];
+  const headers=(grid.shift()||[]).map(header=>String(header).replace(/^\\uFEFF/,'').trim());
   const rows=grid.map(values=>Object.fromEntries(headers.map((header,index)=>[header,values[index]??''])));
   const value=(row,name)=>row[name];
   const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
