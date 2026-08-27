@@ -12,10 +12,46 @@ const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
 let META, EXPO, charts={};
 
+const GOOGLE_SHEET_CSV='https://docs.google.com/spreadsheets/d/10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego/gviz/tq?tqx=out:csv&sheet=Resumo%20Mensal';
+
 Promise.all([
-  fetch('data/meta-dashboard-data.json').then(r=>r.json()),
-  fetch('data/expo-dashboard-data.json').then(r=>r.json())
-]).then(([m,e])=>{META=MidasMetaParser.normalizeMetaData(m);EXPO=e;init();});
+  fetch('data/meta-dashboard-data.json',{cache:'no-store'}).then(r=>r.json()),
+  fetch('data/expo-dashboard-data.json',{cache:'no-store'}).then(r=>r.json())
+]).then(async([m,e])=>{
+  META=MidasMetaParser.normalizeMetaData(m);
+  EXPO=e;
+  try{
+    const sheetData=await loadGoogleSheetSummary();
+    META=MidasMetaParser.mergeMetaData(META,sheetData);
+    window.__midasSheetOnline=true;
+  }catch(error){
+    console.warn('Google Sheets indisponível; usando base de segurança.',error);
+    window.__midasSheetOnline=false;
+  }
+  init();
+});
+
+async function loadGoogleSheetSummary(){
+  const response=await fetch(GOOGLE_SHEET_CSV,{cache:'no-store'});
+  if(!response.ok)throw new Error('base não publicada');
+  const csv=await response.text();
+  if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
+  const wb=XLSX.read(csv,{type:'string'});
+  const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+  const value=(row,name)=>row[name];
+  const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
+  const meses=rows.filter(row=>value(row,'Chave')).map(row=>({
+    mes:value(row,'Mês'),chave:String(value(row,'Chave')).trim(),
+    investimento:maybe(value(row,'Investimento')),impressoes:maybe(value(row,'Impressões')),
+    alcance:maybe(value(row,'Alcance')),cliques:maybe(value(row,'Cliques')),
+    conversas:maybe(value(row,'Conversas')),cpa:maybe(value(row,'CPA')),
+    ctr:maybe(value(row,'CTR')),cpc:maybe(value(row,'CPC')),cpm:maybe(value(row,'CPM')),
+    frequencia:maybe(value(row,'Frequência')),seguidores:maybe(value(row,'Seguidores')),
+    vendas:maybe(value(row,'Vendas')),leadsTrabalhados:maybe(value(row,'Leads trabalhados'))
+  }));
+  if(!meses.length)throw new Error('nenhum mês encontrado');
+  return {meses,campanhas:[],idade:[],genero:[],insights:[],recomendacoes:[],sourceSheets:['Google Sheets']};
+}
 
 function refreshMonthSelect(selected){
   $('monthSelect').innerHTML=META.meses.map(m=>`<option value="${m.chave}">${m.mes}</option>`).join('');
@@ -28,9 +64,13 @@ function init(){
   });
   refreshMonthSelect();
   $('monthSelect').onchange=()=>renderMeta($('monthSelect').value);
-  $('metaUpload').onchange=e=>readMetaFile(e.target.files[0]);
+  const sync=$('metaSyncStatus');
+  if(sync){
+    sync.classList.toggle('success',Boolean(window.__midasSheetOnline));
+    sync.textContent=window.__midasSheetOnline?'● Sincronizado com Google Sheets':'● Base de segurança ativa';
+  }
   $('expoUpload').onchange=e=>readExpoFile(e.target.files[0]);
-  $('metaReset').onclick=()=>location.reload();
+  $('metaRefresh').onclick=()=>location.reload();
   $('expoReset').onclick=()=>location.reload();
   $('printMeta').onclick=()=>window.print();
   $('printExpo').onclick=()=>window.print();
@@ -43,7 +83,7 @@ function switchPanel(panel){
   $('metaPanel').classList.toggle('hidden',panel!=='meta');
   $('warPanel').classList.toggle('hidden',panel!=='war');
   if(panel==='meta'){
-    $('mainTitle').textContent='MIDAS';
+    $('mainTitle').textContent='MÍDIAS';
     $('mainSub').textContent='Performance de marketing e vendas';
     $('mainDesc').textContent='Visão executiva • Funil de performance • Resultado comercial';
   }else{
