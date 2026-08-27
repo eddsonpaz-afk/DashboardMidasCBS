@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CBS Analytics V5</title>
+<title>Dashboard MÍDIAS — Waves Plus + CBS</title>
 <link rel="stylesheet" href="css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -34,10 +34,9 @@
 
   <section id="metaPanel" class="panel-view">
     <div class="control-bar">
-      <label class="file-label">📁 Subir planilha Meta Ads <input id="metaUpload" type="file" accept=".xlsx,.xls,.csv"></label>
-      <span id="metaUploadStatus" class="upload-status">Pronto para importar Excel ou CSV.</span>
+      <span id="metaSyncStatus" class="upload-status">● Conectando ao Google Sheets...</span>
       <select id="monthSelect"></select>
-      <button id="metaReset">↻ Dados padrão</button>
+      <button id="metaRefresh">↻ Atualizar dados</button>
       <button id="printMeta">📄 PDF</button>
     </div>
 
