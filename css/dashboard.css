@@ -923,3 +923,12 @@ body{
   .lower-layout .card{width:100%}
   .card{border-radius:21px}
 }
+
+/* MIDAS BENTO ROW BALANCE */
+@media(min-width:1201px){
+  .meta-kpis .kpi-card:nth-child(n+5){
+    grid-column:span 2;
+    margin-top:0;
+    min-height:126px;
+  }
+}
