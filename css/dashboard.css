@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap');
 
 :root{
   --bg:#05070b;
@@ -1150,4 +1150,106 @@ body{
   .detail-grid{grid-template-columns:1fr}
   .detail-grid .card{grid-column:auto}
   .detail-title{align-items:flex-start;flex-direction:column;gap:4px}
+}
+
+/* MIDAS FLUID TYPOGRAPHY v6 */
+body{
+  font-family:'Manrope',Arial,sans-serif;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+.hero-title h1{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-weight:600;
+  font-style:normal;
+  letter-spacing:.18em;
+  line-height:1;
+}
+.hero-title h2{
+  font-family:'Manrope',sans-serif;
+  font-weight:500;
+  letter-spacing:.02em;
+  text-transform:none;
+  line-height:1.25;
+}
+.hero-title p{
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:none;
+}
+.module-tab,button,select,.file-label{
+  font-family:'Manrope',sans-serif;
+  font-weight:650;
+  letter-spacing:-.01em;
+}
+.deck-heading b{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-weight:600;
+  font-size:17px;
+  letter-spacing:.01em;
+  text-transform:none;
+}
+.deck-heading small{
+  font-weight:450;
+  letter-spacing:0;
+  line-height:1.45;
+}
+.kpi-card span{
+  font-family:'Manrope',sans-serif;
+  font-weight:600;
+  letter-spacing:.015em;
+  text-transform:none;
+  line-height:1.35;
+}
+.kpi-card b,
+.sales-month-card b,
+.efficiency-value b{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-weight:600;
+  letter-spacing:-.035em;
+  line-height:1.08;
+}
+.kpi-card small{
+  font-weight:450;
+  line-height:1.45;
+  letter-spacing:0;
+}
+.embedded-chart h3,.efficiency-panel h3,.sales-chart-panel h3,.flow-insights h3,
+.card h3,.detail-title span{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-weight:600;
+  letter-spacing:.01em;
+  text-transform:none;
+}
+.card h3{font-size:16px}
+.metric-row span{
+  font-weight:600;
+  letter-spacing:0;
+  text-transform:none;
+}
+.metric-row b,.compare-line b,.rank-item b{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-weight:600;
+  letter-spacing:-.02em;
+}
+.table{font-family:'Manrope',sans-serif}
+.table th{
+  font-weight:650;
+  letter-spacing:.01em;
+  text-transform:none;
+}
+.table td{font-weight:450}
+.sales-month-card span{
+  font-weight:600;
+  text-transform:none;
+  letter-spacing:.01em;
+}
+.footer{
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:none;
+}
+@media(max-width:720px){
+  .hero-title h1{letter-spacing:.12em}
+  .deck-heading b{font-size:15px}
 }
