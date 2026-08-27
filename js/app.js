@@ -44,8 +44,8 @@ function switchPanel(panel){
   $('warPanel').classList.toggle('hidden',panel!=='war');
   if(panel==='meta'){
     $('mainTitle').textContent='MIDAS';
-    $('mainSub').textContent='PERFORMANCE DE MARKETING E VENDAS';
-    $('mainDesc').textContent='VISÃO EXECUTIVA • FUNIL DE PERFORMANCE • RESULTADO COMERCIAL';
+    $('mainSub').textContent='Performance de marketing e vendas';
+    $('mainDesc').textContent='Visão executiva • Funil de performance • Resultado comercial';
   }else{
     $('mainTitle').textContent='DASHBOARD DA DIRETORIA';
     $('mainSub').textContent='SALA DE GUERRA';
