@@ -136,6 +136,7 @@ function renderMeta(key){
     borderWidth:1
   }],true);
   $('efficiencyValue').innerHTML=`<b>${pctMaybe(m.roi)}</b><span>ROI</span>`;
+  $('efficiencyAssessment').innerHTML=roiAssessment(m);
 
   makeChart('salesCompareChart','bar',
     salesMonths.map(item=>item.mes.split('/')[0]),
@@ -148,6 +149,21 @@ function renderMeta(key){
 
   const gen=META.genero.filter(g=>g.mes===key);
   makeChart('genderChart','doughnut',gen.map(g=>g.nome),[{data:gen.map(g=>g.participacao),backgroundColor:['#2563eb','#ec4899','#64748b']}],true);
+}
+
+function roiAssessment(m){
+  if(!hasValue(m.roi)||!hasValue(m.roas)){
+    return `<b>Dados insuficientes</b><p>Informe as vendas do mês para avaliar o retorno.</p>`;
+  }
+  const roi=Number(m.roi);
+  let status='Retorno baixo',tone='low';
+  if(roi>=1000){status='Retorno excepcional';tone='exceptional';}
+  else if(roi>=300){status='Retorno muito bom';tone='great';}
+  else if(roi>=100){status='Retorno saudável';tone='good';}
+  else if(roi>=0){status='Retorno positivo';tone='positive';}
+  return `<div class="assessment-head ${tone}"><i></i><b>${status}</b></div>
+    <p>Para cada R$ 1 investido, retornaram <strong>${multipleMaybe(m.roas)}</strong> em vendas.</p>
+    <small>Leitura baseada em vendas atribuídas à mídia, não em lucro líquido.</small>`;
 }
 
 function kpiCard([icon,label,value,small]){
