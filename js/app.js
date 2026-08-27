@@ -43,9 +43,9 @@ function switchPanel(panel){
   $('metaPanel').classList.toggle('hidden',panel!=='meta');
   $('warPanel').classList.toggle('hidden',panel!=='war');
   if(panel==='meta'){
-    $('mainTitle').textContent='DESEMPENHO DE CAMPANHAS';
-    $('mainSub').textContent='META ADS';
-    $('mainDesc').textContent='ANÁLISE COMPLETA • DADOS MENSAIS + COMPARATIVO DOS ÚLTIMOS 3 MESES';
+    $('mainTitle').textContent='MIDAS';
+    $('mainSub').textContent='PERFORMANCE DE MARKETING E VENDAS';
+    $('mainDesc').textContent='VISÃO EXECUTIVA • FUNIL DE PERFORMANCE • RESULTADO COMERCIAL';
   }else{
     $('mainTitle').textContent='DASHBOARD DA DIRETORIA';
     $('mainSub').textContent='SALA DE GUERRA';
@@ -59,18 +59,34 @@ function renderMeta(key){
   const prev=META.meses[META.meses.findIndex(x=>x.chave===key)-1];
   const campaigns=META.campanhas.filter(c=>c.mes===key).sort((a,b)=>b.conversas-a.conversas);
 
-  $('metaKpis').innerHTML=[
-    ['💰','Investimento total',money(m.investimento),'Mês selecionado'],
+  $('executiveKpis').innerHTML=[
     ['💵','Vendas do mês',moneyMaybe(m.vendas),'Receita atribuída'],
-    ['📈','ROI do mês',pctMaybe(m.roi),'Retorno líquido sobre o investimento'],
-    ['🚀','ROAS do mês',multipleMaybe(m.roas),'Receita por real investido'],
-    ['💬','Conversas iniciadas',number(m.conversas),'WhatsApp'],
-    ['🔗','Cliques no link',number(m.cliques),'Estimado'],
-    ['👁️','Impressões',number(m.impressoes),'Volume'],
-    ['📊','CTR',pct(m.ctr),'Taxa de clique'],
-    ['🟠','Custo por conversa',money(m.cpa),'CPA'],
-    ['🖱️','Custo por clique',money(m.cpc),'CPC']
+    ['💰','Investimento',money(m.investimento),'Mídia no mês'],
+    ['📈','ROI',pctMaybe(m.roi),'Retorno líquido'],
+    ['🚀','ROAS',multipleMaybe(m.roas),'Receita por real']
   ].map(kpiCard).join('');
+
+  $('channelKpis').innerHTML=[
+    ['👁️','Impressões',number(m.impressoes),'Volume'],
+    ['🔗','Cliques',number(m.cliques),'Acessos no link'],
+    ['💬','Conversas',number(m.conversas),'WhatsApp'],
+    ['🟠','CPA',money(m.cpa),'Custo por conversa'],
+    ['📊','CTR',pct(m.ctr),'Taxa de clique'],
+    ['🖱️','CPC',money(m.cpc),'Custo por clique']
+  ].map(kpiCard).join('');
+
+  $('commercialKpis').innerHTML=[
+    ['🧲','Leads trabalhados',numberMaybe(m.leadsTrabalhados),'Comercial'],
+    ['👤','Seguidores',numberMaybe(m.seguidores),'Audiência']
+  ].map(kpiCard).join('');
+
+  const salesMonths=META.meses.filter(item=>hasValue(item.vendas)).slice(-3);
+  $('salesMonthCards').innerHTML=salesMonths.slice(-2).map(item=>`
+    <article class="sales-month-card">
+      <span>Vendas ${item.mes.split('/')[0]}</span>
+      <b>${money(item.vendas)}</b>
+      <small>Resultado registrado</small>
+    </article>`).join('');
 
   $('monthMetrics').innerHTML=[
     ['💰','Investimento',money(m.investimento),'investimento',true],
@@ -100,13 +116,30 @@ function renderMeta(key){
   $('metaInsights').innerHTML=META.insights.map(x=>`<li>${x}</li>`).join('');
   $('metaRecommendations').innerHTML=META.recomendacoes.map(x=>`<li>${x}</li>`).join('');
 
-  const chartMonths=META.meses.slice(-4);
-  makeChart('mainBarChart','bar',
+  const chartMonths=META.meses.slice(-6);
+  makeChart('mainBarChart','line',
     chartMonths.map(item=>item.mes.split('/')[0]),
     [
-      {label:'Investimento',data:chartMonths.map(item=>item.investimento),backgroundColor:'#f97316'},
-      {label:'Vendas',data:chartMonths.map(item=>hasValue(item.vendas)?item.vendas:0),backgroundColor:'#22c55e'}
+      {label:'Investimento',data:chartMonths.map(item=>item.investimento),borderColor:'#facc15',backgroundColor:'rgba(250,204,21,.10)',fill:true,tension:.38},
+      {label:'Vendas',data:chartMonths.map(item=>hasValue(item.vendas)?item.vendas:null),borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,.12)',fill:true,tension:.38}
     ],
+    false
+  );
+
+  const efficiencyBase=hasValue(m.vendas)&&m.vendas>0
+    ?[Math.max(m.vendas-m.investimento,0),m.investimento]
+    :[0,m.investimento||1];
+  makeChart('efficiencyChart','doughnut',['Retorno','Investimento'],[{
+    data:efficiencyBase,
+    backgroundColor:['#22d3ee','#facc15'],
+    borderColor:['rgba(34,211,238,.9)','rgba(250,204,21,.9)'],
+    borderWidth:1
+  }],true);
+  $('efficiencyValue').innerHTML=`<b>${pctMaybe(m.roi)}</b><span>ROI</span>`;
+
+  makeChart('salesCompareChart','bar',
+    salesMonths.map(item=>item.mes.split('/')[0]),
+    [{label:'Vendas',data:salesMonths.map(item=>item.vendas),backgroundColor:['#1676c9','#1fa8e6','#22d3ee'],borderRadius:10}],
     false
   );
 
