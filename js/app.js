@@ -58,20 +58,19 @@ function parseCsv(text){
   const rows=[];
   let row=[],cell='',quoted=false;
   for(let i=0;i<text.length;i++){
-    const char=text[i];
+    const char=text[i],code=char.charCodeAt(0);
     if(char==='"'){
       if(quoted&&text[i+1]==='"'){cell+='"';i++;}
       else quoted=!quoted;
     }else if(char===','&&!quoted){row.push(cell);cell='';}
-    else if((char==='\\n'||char==='\\r')&&!quoted){
-      if(char==='\\r'&&text[i+1]==='\\n')i++;
+    else if((code===10||code===13)&&!quoted){
+      if(code===13&&text[i+1]?.charCodeAt(0)===10)i++;
       row.push(cell);rows.push(row);row=[];cell='';
     }else cell+=char;
   }
   if(cell||row.length){row.push(cell);rows.push(row);}
   return rows;
 }
-
 function refreshMonthSelect(selected){
   $('monthSelect').innerHTML=META.meses.map(m=>`<option value="${m.chave}">${m.mes}</option>`).join('');
   $('monthSelect').value=selected&&META.meses.some(m=>m.chave===selected)?selected:META.meses[META.meses.length-1].chave;
