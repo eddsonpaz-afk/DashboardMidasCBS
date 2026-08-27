@@ -12,7 +12,7 @@ const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
 let META, EXPO, charts={};
 
-const GOOGLE_SHEET_CSV='https://docs.google.com/spreadsheets/d/10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego/gviz/tq?tqx=out:csv&sheet=Resumo%20Mensal';
+const GOOGLE_SHEET_CSV='https://docs.google.com/spreadsheets/d/10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego/gviz/tq?tqx=out:json&sheet=Resumo%20Mensal';
 
 Promise.all([
   fetch('data/meta-dashboard-data.json',{cache:'no-store'}).then(r=>r.json()),
@@ -34,11 +34,16 @@ Promise.all([
 async function loadGoogleSheetSummary(){
   const response=await fetch(GOOGLE_SHEET_CSV,{cache:'no-store'});
   if(!response.ok)throw new Error('base não publicada');
-  const csv=await response.text();
-  if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
-  const grid=parseCsv(csv);
-  const headers=(grid.shift()||[]).map(header=>String(header).replace(/^\\uFEFF/,'').trim());
-  const rows=grid.map(values=>Object.fromEntries(headers.map((header,index)=>[header,values[index]??''])));
+  const payload=await response.text();
+  if(!payload||payload.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
+  const start=payload.indexOf('{'),end=payload.lastIndexOf('}');
+  if(start<0||end<start)throw new Error('formato inesperado');
+  const table=JSON.parse(payload.slice(start,end+1)).table;
+  const headers=(table.cols||[]).map(col=>String(col.label||col.id||'').trim());
+  const rows=(table.rows||[]).map(row=>Object.fromEntries(headers.map((header,index)=>{
+    const cell=row.c?.[index];
+    return [header,cell?.f??cell?.v??''];
+  })));
   const value=(row,name)=>row[name];
   const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
   const meses=rows.filter(row=>value(row,'Mês')).map(row=>({
