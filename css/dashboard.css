@@ -1253,3 +1253,28 @@ body{
   .hero-title h1{letter-spacing:.12em}
   .deck-heading b{font-size:15px}
 }
+
+/* ROI ASSESSMENT */
+.efficiency-assessment{
+  margin-top:12px;padding:13px 14px;border-radius:16px;
+  border:1px solid rgba(56,217,150,.20);
+  background:linear-gradient(135deg,rgba(56,217,150,.09),rgba(34,211,238,.045));
+}
+.assessment-head{display:flex;align-items:center;gap:8px}
+.assessment-head i{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 12px rgba(56,217,150,.75);
+}
+.assessment-head b{
+  font-family:'Outfit','Manrope',sans-serif;
+  font-size:15px;font-weight:600;color:#6ee7b7;
+}
+.assessment-head.low i{background:var(--red)}
+.assessment-head.low b{color:#fda4af}
+.efficiency-assessment p{
+  margin:7px 0 5px;color:#e6f4fa;font-size:12px;line-height:1.45;
+}
+.efficiency-assessment p strong{color:#67e8f9;font-weight:700}
+.efficiency-assessment small{
+  display:block;color:var(--muted);font-size:9px;line-height:1.4;
+}
