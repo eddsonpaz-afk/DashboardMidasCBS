@@ -1494,3 +1494,24 @@ body{
 .fair-executive-note>b{color:var(--yellow);text-transform:uppercase}.fair-executive-note p{margin:7px 0 0;line-height:1.65;color:#e5edf6}
 @media(max-width:1100px){.fair-scenarios{grid-template-columns:1fr 1fr}.fair-top-grid{grid-template-columns:1fr}.scenario-card.official{transform:none}}
 @media(max-width:700px){.fair-selector,.fair-intro,.scenario-heading{align-items:stretch;flex-direction:column}.fair-choice{display:grid}.fair-official-goal{min-width:0}.fair-scenarios{grid-template-columns:1fr}.break-even-flow{grid-template-columns:1fr}.break-even-flow i{transform:rotate(90deg);text-align:center}.investment-card>strong,.break-even-card>strong{font-size:34px}.fair-intro h2{letter-spacing:-1px}}
+
+/* FEIRAS — ANÁLISE AUTOMÁTICA DE VENDAS */
+.fair-scenarios{grid-template-columns:repeat(3,1fr)}
+.fair-sales-input{display:grid;grid-template-columns:auto minmax(150px,1fr) auto;gap:10px;align-items:center;margin:12px 0}
+.fair-sales-input>span{font-size:25px;font-weight:900;color:var(--yellow)}
+.fair-sales-input input{width:100%;border:1px solid rgba(250,204,21,.45);border-radius:13px;background:#030914;color:#fff;padding:13px 14px;font-size:25px;font-weight:800;outline:none}
+.fair-sales-input input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(250,204,21,.1)}
+.fair-sales-input button{white-space:nowrap;background:linear-gradient(135deg,#facc15,#f59e0b);color:#07101c}
+.fair-save-note{display:block;color:var(--muted);margin-bottom:16px}
+.fair-return-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fair-return-summary>div{padding:14px;border:1px solid rgba(34,211,238,.25);border-radius:14px;background:rgba(34,211,238,.07)}
+.fair-return-summary small,.fair-return-summary b{display:block}.fair-return-summary small{color:var(--muted);font-size:10px;text-transform:uppercase}.fair-return-summary b{font-size:21px;margin-top:6px}.fair-return-summary .positive b{color:#86efac}
+.scenario-position{padding:8px 12px;text-align:center;font-size:11px;font-weight:900;letter-spacing:.8px;background:rgba(255,255,255,.05);color:var(--muted)}
+.scenario-card.reached .scenario-position{background:rgba(34,197,94,.18);color:#86efac}
+.scenario-card.current{box-shadow:0 0 0 2px var(--scenario),0 0 32px color-mix(in srgb,var(--scenario) 28%,transparent)}
+.scenario-card.current .scenario-position{background:var(--scenario);color:#061018}
+.scenario-gap{display:block;margin-top:9px;color:var(--scenario);font-size:14px;font-weight:900}
+.fair-progress-card{margin-top:16px;padding:18px 20px;border:1px solid rgba(34,211,238,.3);border-radius:18px;background:rgba(7,16,28,.8)}
+.fair-progress-heading{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-size:12px;font-weight:900}.fair-progress-heading b{color:var(--cyan)}
+.fair-progress-track{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.fair-progress-track i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#22c55e,#facc15,#22d3ee);transition:width .6s ease}
+@media(max-width:760px){.fair-sales-input{grid-template-columns:auto 1fr}.fair-sales-input button{grid-column:1/-1}.fair-return-summary{grid-template-columns:1fr}}
