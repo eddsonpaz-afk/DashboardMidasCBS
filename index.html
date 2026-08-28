@@ -236,26 +236,26 @@
         </article>
 
         <article class="break-even-card">
-          <span>PONTO MÍNIMO DE RETORNO</span>
-          <strong>R$ 152.688,81</strong>
-          <h4>em vendas para recuperar o investimento</h4>
-          <div class="break-even-flow">
-            <div><small>Investido</small><b>R$ 152,7 mil</b></div>
-            <i>→</i>
-            <div><small>Meta oficial</small><b>R$ 1 milhão</b></div>
+          <span>VENDAS REALIZADAS ATÉ AGORA</span>
+          <div class="fair-sales-input">
+            <span>R$</span>
+            <input id="fairSalesInput" type="text" inputmode="decimal" value="277.088,58" aria-label="Valor vendido na EXPOCONSTRUIR">
+            <button id="fairSalesApply">Atualizar análise</button>
           </div>
-          <p>A meta escolhida precisa gerar vendas suficientes para superar o valor investido. Na meta oficial, o pipeline projetado cobre o investimento em <b>6,55 vezes</b>.</p>
+          <small class="fair-save-note">O valor fica salvo neste navegador e todas as análises são recalculadas.</small>
+          <div id="fairReturnSummary" class="fair-return-summary"></div>
         </article>
       </div>
 
       <div class="scenario-heading">
-        <div><span class="eyebrow">CENÁRIOS DE RETORNO</span><h3>Pipeline de oportunidades</h3></div>
-        <p>A meta oficial está destacada como direção principal.</p>
+        <div><span class="eyebrow">NÍVEIS DE RETORNO</span><h3>Metas de vendas</h3></div>
+        <p>O painel mostra automaticamente onde estamos e quanto falta para o próximo nível.</p>
       </div>
 
       <div class="fair-scenarios">
-        <article class="scenario-card conservative">
-          <header><span>CONSERVADOR</span><strong>R$ 250 mil</strong></header>
+        <article class="scenario-card conservative" data-sales-target="250000">
+          <div class="scenario-position"></div>
+          <header><span>NÍVEL 1 • CONSERVADOR</span><strong>R$ 250 mil</strong></header>
           <div class="scenario-stats">
             <p><b>500</b><span>Leads</span></p><p><b>50</b><span>Leads A</span></p>
             <p><b>20</b><span>Reuniões</span></p><p><b>10</b><span>Propostas</span></p>
@@ -264,8 +264,9 @@
           <footer><small>COBERTURA DO INVESTIMENTO</small><b>1,64x</b></footer>
         </article>
 
-        <article class="scenario-card realistic">
-          <header><span>REALISTA</span><strong>R$ 500 mil</strong></header>
+        <article class="scenario-card realistic" data-sales-target="500000">
+          <div class="scenario-position"></div>
+          <header><span>NÍVEL 2 • REALISTA</span><strong>R$ 500 mil</strong></header>
           <div class="scenario-stats">
             <p><b>500</b><span>Leads</span></p><p><b>100</b><span>Leads A</span></p>
             <p><b>50</b><span>Reuniões</span></p><p><b>30</b><span>Propostas</span></p>
@@ -274,7 +275,8 @@
           <footer><small>COBERTURA DO INVESTIMENTO</small><b>3,27x</b></footer>
         </article>
 
-        <article class="scenario-card official">
+        <article class="scenario-card official" data-sales-target="1000000">
+          <div class="scenario-position"></div>
           <div class="official-ribbon">★ META OFICIAL ★</div>
           <header><span>OBJETIVO ESCOLHIDO</span><strong>R$ 1 milhão</strong></header>
           <div class="scenario-stats">
@@ -284,21 +286,16 @@
           </div>
           <footer><small>COBERTURA DO INVESTIMENTO</small><b>6,55x</b></footer>
         </article>
+      </div>
 
-        <article class="scenario-card extraordinary">
-          <header><span>EXTRAORDINÁRIO</span><strong>R$ 1,5 milhão+</strong></header>
-          <div class="scenario-stats">
-            <p><b>500</b><span>Leads</span></p><p><b>120</b><span>Leads A</span></p>
-            <p><b>70</b><span>Reuniões</span></p><p><b>50</b><span>Propostas</span></p>
-            <p><b>20</b><span>Negócios</span></p>
-          </div>
-          <footer><small>COBERTURA DO INVESTIMENTO</small><b>9,82x</b></footer>
-        </article>
+      <div class="fair-progress-card">
+        <div class="fair-progress-heading"><span>PROGRESSO ATÉ A META OFICIAL</span><b id="fairProgressLabel"></b></div>
+        <div class="fair-progress-track"><i id="fairProgressBar"></i></div>
       </div>
 
       <div class="fair-executive-note">
         <b>Leitura executiva</b>
-        <p>O investimento só se paga quando as vendas atribuídas à feira ultrapassarem <strong>R$ 152.688,81</strong>. A meta oficial não representa faturamento imediato: representa um pipeline de <strong>R$ 1 milhão</strong> que deverá ser trabalhado e convertido no pós-feira.</p>
+        <p id="fairExecutiveAnalysis"></p>
       </div>
     </section>
   </section>
