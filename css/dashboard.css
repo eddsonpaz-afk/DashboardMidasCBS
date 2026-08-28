@@ -1437,3 +1437,60 @@ body{
   .strategic-metric{border-radius:17px;padding:16px}
   .strategic-months strong{font-size:.9rem}
 }
+
+/* FEIRAS — INVESTIMENTO E RETORNO */
+.fair-selector,.fair-intro,.scenario-heading{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:18px 20px;border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(135deg,rgba(10,21,37,.98),rgba(3,9,16,.98));
+  margin-bottom:14px;
+}
+.eyebrow{color:var(--yellow);font-size:11px;font-weight:900;letter-spacing:1.8px}
+.fair-selector h3,.scenario-heading h3{margin:3px 0 0;font:700 25px Manrope,sans-serif}
+.fair-choice{display:flex;gap:10px}
+.fair-option.active{background:linear-gradient(135deg,#facc15,#f59e0b);color:#07101c;border-color:#fde047}
+.fair-empty{
+  min-height:430px;display:grid;place-content:center;text-align:center;padding:40px;
+  border:1px dashed rgba(250,204,21,.35);border-radius:22px;
+  background:radial-gradient(circle at 50% 30%,rgba(250,204,21,.1),transparent 38%),rgba(7,16,28,.78)
+}
+.fair-empty span{color:var(--yellow);font-weight:900;letter-spacing:2px}
+.fair-empty h2{font:700 clamp(30px,4vw,58px) Manrope,sans-serif;margin:10px 0}
+.fair-empty p{max-width:650px;color:var(--muted);line-height:1.65}
+.fair-intro{padding:28px}
+.fair-intro h2{margin:5px 0;font:800 clamp(34px,4.5vw,70px) Manrope,sans-serif;letter-spacing:-2px;text-transform:uppercase}
+.fair-intro p{max-width:800px;color:var(--muted);line-height:1.55}
+.fair-official-goal{min-width:290px;padding:20px;border:1px solid rgba(132,204,22,.55);border-radius:18px;background:rgba(77,124,15,.16);text-align:center}
+.fair-official-goal small,.fair-official-goal span{display:block;color:#bef264}
+.fair-official-goal strong{display:block;color:#d9f99d;font-size:36px;margin:4px 0}
+.fair-top-grid{display:grid;grid-template-columns:minmax(360px,.85fr) 1.4fr;gap:14px;margin-bottom:16px}
+.investment-card,.break-even-card{
+  border:1px solid rgba(250,204,21,.42);border-radius:20px;padding:22px;
+  background:linear-gradient(145deg,rgba(18,24,34,.98),rgba(3,8,14,.98));box-shadow:0 22px 50px rgba(0,0,0,.28)
+}
+.investment-card>span,.break-even-card>span{color:var(--yellow);font-size:12px;font-weight:900;letter-spacing:1.3px}
+.investment-card>strong,.break-even-card>strong{display:block;color:var(--yellow);font-size:clamp(36px,4vw,62px);letter-spacing:-2px;margin:7px 0 15px}
+.cost-line{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px dashed rgba(255,255,255,.15)}
+.cost-line span{color:#d6e0eb}.cost-line b{white-space:nowrap}
+.break-even-card h4{margin:-8px 0 20px;color:#fff;font-size:18px}
+.break-even-flow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px}
+.break-even-flow div{padding:16px;border-radius:14px;background:rgba(37,99,235,.14);border:1px solid rgba(34,211,238,.25)}
+.break-even-flow small,.break-even-flow b{display:block}.break-even-flow small{color:var(--muted)}.break-even-flow b{font-size:22px;margin-top:5px}.break-even-flow i{font-size:30px;color:var(--yellow)}
+.break-even-card p{color:#cbd5e1;line-height:1.65;margin:18px 0 0}
+.scenario-heading{margin-top:0}.scenario-heading p{color:var(--muted)}
+.fair-scenarios{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.scenario-card{position:relative;overflow:hidden;border:1px solid var(--scenario);border-radius:20px;background:linear-gradient(180deg,color-mix(in srgb,var(--scenario) 14%,#07101c),#03070d 58%);box-shadow:0 18px 42px rgba(0,0,0,.28)}
+.scenario-card.conservative{--scenario:#ef3b24}.scenario-card.realistic{--scenario:#facc15}.scenario-card.official{--scenario:#84cc16;transform:translateY(-5px);box-shadow:0 0 30px rgba(132,204,22,.2)}.scenario-card.extraordinary{--scenario:#2196f3}
+.scenario-card header{padding:20px 18px 14px;border-bottom:1px solid color-mix(in srgb,var(--scenario) 35%,transparent)}
+.scenario-card header span{display:block;color:var(--scenario);font-size:12px;font-weight:900;letter-spacing:1px}
+.scenario-card header strong{display:block;font-size:29px;margin-top:7px}
+.official-ribbon{padding:8px;text-align:center;background:#65a30d;color:white;font-weight:900;letter-spacing:1px}
+.scenario-stats{padding:8px 18px}
+.scenario-stats p{display:flex;align-items:baseline;gap:10px;margin:0;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+.scenario-stats p b{font-size:24px;min-width:52px}.scenario-stats p span{color:#cbd5e1}
+.scenario-card footer{padding:16px 18px;text-align:center;background:rgba(0,0,0,.24)}
+.scenario-card footer small{display:block;color:var(--muted);font-size:10px}.scenario-card footer b{display:block;color:var(--scenario);font-size:35px;margin-top:5px}
+.fair-executive-note{margin-top:16px;padding:20px 24px;border-radius:18px;border:1px solid rgba(250,204,21,.4);background:linear-gradient(90deg,rgba(250,204,21,.12),rgba(34,211,238,.08))}
+.fair-executive-note>b{color:var(--yellow);text-transform:uppercase}.fair-executive-note p{margin:7px 0 0;line-height:1.65;color:#e5edf6}
+@media(max-width:1100px){.fair-scenarios{grid-template-columns:1fr 1fr}.fair-top-grid{grid-template-columns:1fr}.scenario-card.official{transform:none}}
+@media(max-width:700px){.fair-selector,.fair-intro,.scenario-heading{align-items:stretch;flex-direction:column}.fair-choice{display:grid}.fair-official-goal{min-width:0}.fair-scenarios{grid-template-columns:1fr}.break-even-flow{grid-template-columns:1fr}.break-even-flow i{transform:rotate(90deg);text-align:center}.investment-card>strong,.break-even-card>strong{font-size:34px}.fair-intro h2{letter-spacing:-1px}}
