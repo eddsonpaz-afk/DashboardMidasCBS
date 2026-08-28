@@ -1357,3 +1357,83 @@ body{
     font-size:13px;
   }
 }
+
+
+/* Comparativo estratégico — leitura executiva dos últimos três meses */
+.strategic-compare-section{
+  margin:28px 0;
+  padding:26px;
+  border:1px solid rgba(56,189,248,.22);
+  background:linear-gradient(145deg,rgba(9,27,48,.96),rgba(8,18,34,.92));
+  box-shadow:0 22px 60px rgba(0,0,0,.28);
+  overflow:hidden;
+}
+.strategic-compare-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:20px;
+}
+.strategic-compare-heading span{
+  color:#67e8f9;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.18em;
+}
+.strategic-compare-heading h3{
+  margin:4px 0 0;
+  color:#fff;
+  font-size:clamp(1.35rem,2.2vw,2rem);
+  font-weight:650;
+  letter-spacing:-.035em;
+}
+.strategic-compare-heading small{color:#94a3b8;font-size:.82rem;text-align:right}
+.strategic-compare-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.strategic-metric{
+  padding:18px;
+  border:1px solid rgba(148,163,184,.16);
+  border-radius:20px;
+  background:linear-gradient(150deg,rgba(20,43,68,.78),rgba(9,24,43,.72));
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+.strategic-metric:hover{
+  transform:translateY(-3px);
+  border-color:rgba(56,189,248,.38);
+  box-shadow:0 14px 30px rgba(0,0,0,.22);
+}
+.strategic-metric-title{display:flex;align-items:center;gap:9px;margin-bottom:14px;color:#e2e8f0}
+.strategic-metric-title span{font-size:1.15rem}
+.strategic-metric-title b{font-size:.86rem;font-weight:650;letter-spacing:.01em}
+.strategic-months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.strategic-months div{min-width:0;padding:10px 8px;border-radius:13px;background:rgba(2,12,25,.42)}
+.strategic-months small{display:block;color:#7dd3fc;font-size:.65rem;text-transform:uppercase;margin-bottom:5px}
+.strategic-months strong{display:block;color:#fff;font-size:clamp(.76rem,1.25vw,1.02rem);font-weight:650;white-space:nowrap}
+.strategic-reading{margin:12px 0 0;font-size:.72rem;line-height:1.35}
+.strategic-reading.positive{color:#6ee7b7}.strategic-reading.negative{color:#fca5a5}.strategic-reading.neutral{color:#94a3b8}
+.strategic-analysis{
+  margin-top:16px;
+  padding:16px 18px;
+  border-left:3px solid #22d3ee;
+  border-radius:0 14px 14px 0;
+  background:rgba(34,211,238,.07);
+  color:#cbd5e1;
+  font-size:.88rem;
+  line-height:1.6;
+}
+.strategic-analysis b{color:#fff;font-weight:650}
+@media(max-width:900px){
+  .strategic-compare-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .strategic-compare-section{padding:18px 14px;margin:18px 0}
+  .strategic-compare-heading{align-items:flex-start;flex-direction:column;gap:7px}
+  .strategic-compare-heading small{text-align:left;line-height:1.5}
+  .strategic-compare-grid{grid-template-columns:1fr}
+  .strategic-metric{border-radius:17px;padding:16px}
+  .strategic-months strong{font-size:.9rem}
+}
