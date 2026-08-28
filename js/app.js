@@ -313,28 +313,36 @@ function renderStrategicCompare(){
   const months=META.meses.slice(-3);
   const previous=months[months.length-2],current=months[months.length-1];
   const specs=[
-    ['👤','Seguidores','seguidores',numberMaybe,false],
-    ['👁️','Impressões','impressoes',number,false],
-    ['📈','ROI','roi',pctMaybe,false],
-    ['🚀','ROAS','roas',multipleMaybe,false],
-    ['💬','Conversas','conversas',number,false],
-    ['🔗','Cliques','cliques',number,false]
+    ['👤','Seguidores','seguidores',numberMaybe,'higher'],
+    ['💵','Vendas','vendas',moneyMaybe,'higher'],
+    ['💰','Investimento','investimento',money,'neutral'],
+    ['🧲','Leads trabalhados','leadsTrabalhados',numberMaybe,'higher'],
+    ['👁️','Impressões','impressoes',number,'higher'],
+    ['👥','Alcance','alcance',number,'higher'],
+    ['📈','ROI','roi',pctMaybe,'higher'],
+    ['🚀','ROAS','roas',multipleMaybe,'higher'],
+    ['💬','Conversas','conversas',number,'higher'],
+    ['🔗','Cliques','cliques',number,'higher'],
+    ['🟠','CPA','cpa',money,'lower'],
+    ['📊','CTR','ctr',pct,'higher'],
+    ['🖱️','CPC','cpc',money,'lower']
   ];
-  $('strategicCompareGrid').innerHTML=specs.map(([icon,label,field,formatter])=>{
+  $('strategicCompareGrid').innerHTML=specs.map(([icon,label,field,formatter,goal])=>{
     const prevValue=previous?.[field],currValue=current?.[field];
     const delta=hasValue(prevValue)&&Number(prevValue)!==0&&hasValue(currValue)?(Number(currValue)-Number(prevValue))/Number(prevValue)*100:null;
+    const readingClass=delta===null||goal==='neutral'?'neutral':goal==='lower'?(delta<=0?'positive':'negative'):(delta>=0?'positive':'negative');
     return `<article class="strategic-metric">
       <div class="strategic-metric-title"><span>${icon}</span><b>${label}</b></div>
       <div class="strategic-months">${months.map(m=>`<div><small>${m.mes.split('/')[0]}</small><strong>${formatter(m[field])}</strong></div>`).join('')}</div>
-      <p class="strategic-reading ${delta===null?'neutral':delta>=0?'positive':'negative'}">${delta===null?'Sem base suficiente para calcular a variação.':`${delta>=0?'▲':'▼'} ${Math.abs(delta).toFixed(1).replace('.',',')}% de ${previous.mes.split('/')[0]} para ${current.mes.split('/')[0]}`}</p>
+      <p class="strategic-reading ${readingClass}">${delta===null?'Sem base suficiente para calcular a variação.':`${delta>=0?'▲':'▼'} ${Math.abs(delta).toFixed(1).replace('.',',')}% de ${previous.mes.split('/')[0]} para ${current.mes.split('/')[0]}`}</p>
     </article>`;
   }).join('');
   if(previous&&current){
-    const followerDelta=hasValue(previous.seguidores)&&hasValue(current.seguidores)?(current.seguidores-previous.seguidores)/previous.seguidores*100:null;
-    const impressionDelta=(current.impressoes-previous.impressoes)/previous.impressoes*100;
-    const conversationDelta=(current.conversas-previous.conversas)/previous.conversas*100;
-    const clickDelta=(current.cliques-previous.cliques)/previous.cliques*100;
-    $('strategicAnalysis').innerHTML=`<b>Leitura de agosto:</b> ${followerDelta===null?'seguidores sem base anterior completa':`a audiência cresceu ${Math.abs(followerDelta).toFixed(1).replace('.',',')}%`}; impressões ${impressionDelta>=0?'subiram':'caíram'} ${Math.abs(impressionDelta).toFixed(1).replace('.',',')}%, enquanto conversas cresceram ${conversationDelta.toFixed(1).replace('.',',')}% e cliques ${clickDelta.toFixed(1).replace('.',',')}%. Mesmo abaixo de julho, o ROI de ${pctMaybe(current.roi)} e o ROAS de ${multipleMaybe(current.roas)} continuam em nível excepcional.`;
+    const change=field=>hasValue(previous[field])&&Number(previous[field])!==0&&hasValue(current[field])?(Number(current[field])-Number(previous[field]))/Number(previous[field])*100:null;
+    const followerDelta=change('seguidores'),salesDelta=change('vendas'),leadDelta=change('leadsTrabalhados');
+    const impressionDelta=change('impressoes'),conversationDelta=change('conversas'),clickDelta=change('cliques'),cpaDelta=change('cpa');
+    const part=(label,value,goodWord,badWord)=>value===null?`${label} sem base completa`:`${label} ${value>=0?goodWord:badWord} ${Math.abs(value).toFixed(1).replace('.',',')}%`;
+    $('strategicAnalysis').innerHTML=`<b>Leitura de ${current.mes.split('/')[0]}:</b> ${part('a audiência',followerDelta,'cresceu','caiu')}; ${part('os leads',leadDelta,'cresceram','caíram')}; ${part('as conversas',conversationDelta,'cresceram','caíram')} e ${part('os cliques',clickDelta,'subiram','caíram')}. ${part('O CPA',cpaDelta,'subiu','caiu')} e ${part('as vendas',salesDelta,'cresceram','caíram')}. Mesmo abaixo do mês anterior, o ROI de ${pctMaybe(current.roi)} e o ROAS de ${multipleMaybe(current.roas)} continuam em nível excepcional.`;
   }
 }
 
