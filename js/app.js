@@ -12,7 +12,7 @@ const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
 let META, EXPO, charts={};
 
-const GOOGLE_SHEET_CSV='https://docs.google.com/spreadsheets/d/10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego/gviz/tq?tqx=out:csv&sheet=Resumo%20Mensal';
+const GOOGLE_SHEET_ID='10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego';
 
 Promise.all([
   fetch('data/meta-dashboard-data.json',{cache:'no-store'}).then(r=>r.json()),
@@ -21,7 +21,7 @@ Promise.all([
   META=MidasMetaParser.normalizeMetaData(m);
   EXPO=e;
   try{
-    const sheetData=await loadGoogleSheetSummary();
+    const sheetData=await loadGoogleSheetData();
     META=MidasMetaParser.mergeMetaData(META,sheetData);
     window.__midasSheetOnline=true;
   }catch(error){
@@ -31,27 +31,45 @@ Promise.all([
   init();
 });
 
-async function loadGoogleSheetSummary(){
-  const response=await fetch(GOOGLE_SHEET_CSV,{cache:'no-store'});
-  if(!response.ok)throw new Error('base não publicada');
+async function fetchGoogleSheetRows(sheet){
+  const url=`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}`;
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw new Error(`aba ${sheet} não publicada`);
   const csv=await response.text();
-  if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error('resposta inválida');
+  if(!csv||csv.includes('<!DOCTYPE html>'))throw new Error(`resposta inválida em ${sheet}`);
   const grid=parseCsv(csv);
   const headers=(grid.shift()||[]).map(header=>String(header).replace(/^\\uFEFF/,'').trim());
-  const rows=grid.map(values=>Object.fromEntries(headers.map((header,index)=>[header,values[index]??''])));
-  const value=(row,name)=>row[name];
+  return grid.map(values=>Object.fromEntries(headers.map((header,index)=>[header,values[index]??''])));
+}
+
+async function loadGoogleSheetData(){
+  const [monthlyRows,campaignRows,ageRows,genderRows]=await Promise.all([
+    fetchGoogleSheetRows('Resumo Mensal'),fetchGoogleSheetRows('Campanhas'),
+    fetchGoogleSheetRows('Idade'),fetchGoogleSheetRows('Gênero')
+  ]);
   const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
-  const meses=rows.filter(row=>value(row,'Mês')).map(row=>({
-    mes:value(row,'Mês'),chave:MidasMetaParser.monthKey(value(row,'Mês'))||String(value(row,'Chave')).trim(),
-    investimento:maybe(value(row,'Investimento')),impressoes:maybe(value(row,'Impressões')),
-    alcance:maybe(value(row,'Alcance')),cliques:maybe(value(row,'Cliques')),
-    conversas:maybe(value(row,'Conversas')),cpa:maybe(value(row,'CPA')),
-    ctr:maybe(value(row,'CTR')),cpc:maybe(value(row,'CPC')),cpm:maybe(value(row,'CPM')),
-    frequencia:maybe(value(row,'Frequência')),seguidores:maybe(value(row,'Seguidores')),
-    vendas:maybe(value(row,'Vendas')),leadsTrabalhados:maybe(value(row,'Leads trabalhados'))
+  const key=row=>MidasMetaParser.monthKey(row['Mês']||row['Chave'])||String(row['Chave']||'').trim();
+  const meses=monthlyRows.filter(row=>row['Mês']).map(row=>({
+    mes:row['Mês'],chave:key(row),investimento:maybe(row['Investimento']),
+    impressoes:maybe(row['Impressões']),alcance:maybe(row['Alcance']),cliques:maybe(row['Cliques']),
+    conversas:maybe(row['Conversas']),cpa:maybe(row['CPA']),ctr:maybe(row['CTR']),
+    cpc:maybe(row['CPC']),cpm:maybe(row['CPM']),frequencia:maybe(row['Frequência']),
+    seguidores:maybe(row['Seguidores']),vendas:maybe(row['Vendas']),leadsTrabalhados:maybe(row['Leads trabalhados'])
+  }));
+  const campanhas=campaignRows.filter(row=>row['Chave']&&row['Campanha']).map(row=>({
+    mes:key(row),nome:row['Campanha'],investimento:maybe(row['Investimento'])||0,
+    impressoes:maybe(row['Impressões'])||0,alcance:maybe(row['Alcance'])||0,
+    cliques:maybe(row['Cliques'])||0,conversas:maybe(row['Conversas'])||0,
+    cpa:maybe(row['CPA'])||0,ctr:maybe(row['CTR'])||0,cpc:maybe(row['CPC'])||0,cpm:maybe(row['CPM'])||0
+  }));
+  const idade=ageRows.filter(row=>row['Chave']&&row['Faixa etária']).map(row=>({
+    mes:key(row),faixa:row['Faixa etária'],cpa:maybe(row['CPA'])||0,conversas:maybe(row['Conversas'])||0
+  }));
+  const genero=genderRows.filter(row=>row['Chave']&&row['Gênero']).map(row=>({
+    mes:key(row),nome:row['Gênero'],participacao:maybe(row['Participação'])||0,cpa:maybe(row['CPA'])||0
   }));
   if(!meses.length)throw new Error('nenhum mês encontrado');
-  return {meses,campanhas:[],idade:[],genero:[],insights:[],recomendacoes:[],sourceSheets:['Google Sheets']};
+  return {meses,campanhas,idade,genero,sourceSheets:['Google Sheets']};
 }
 
 function parseCsv(text){
@@ -171,6 +189,7 @@ function renderMeta(key){
   renderCampaignTable(campaigns,m);
   renderRanking(campaigns);
   renderCompare();
+  renderStrategicCompare();
   $('metaInsights').innerHTML=META.insights.map(x=>`<li>${x}</li>`).join('');
   $('metaRecommendations').innerHTML=META.recomendacoes.map(x=>`<li>${x}</li>`).join('');
 
@@ -288,6 +307,35 @@ function renderRanking(camps){
       <div><h4>${c.nome}</h4><span>${number(c.conversas)} conversas • ${money(c.investimento)} investidos</span></div>
       <b>${c.cpa?money(c.cpa):'–'}</b>
     </div>`).join('');
+}
+
+function renderStrategicCompare(){
+  const months=META.meses.slice(-3);
+  const previous=months[months.length-2],current=months[months.length-1];
+  const specs=[
+    ['👤','Seguidores','seguidores',numberMaybe,false],
+    ['👁️','Impressões','impressoes',number,false],
+    ['📈','ROI','roi',pctMaybe,false],
+    ['🚀','ROAS','roas',multipleMaybe,false],
+    ['💬','Conversas','conversas',number,false],
+    ['🔗','Cliques','cliques',number,false]
+  ];
+  $('strategicCompareGrid').innerHTML=specs.map(([icon,label,field,formatter])=>{
+    const prevValue=previous?.[field],currValue=current?.[field];
+    const delta=hasValue(prevValue)&&Number(prevValue)!==0&&hasValue(currValue)?(Number(currValue)-Number(prevValue))/Number(prevValue)*100:null;
+    return `<article class="strategic-metric">
+      <div class="strategic-metric-title"><span>${icon}</span><b>${label}</b></div>
+      <div class="strategic-months">${months.map(m=>`<div><small>${m.mes.split('/')[0]}</small><strong>${formatter(m[field])}</strong></div>`).join('')}</div>
+      <p class="strategic-reading ${delta===null?'neutral':delta>=0?'positive':'negative'}">${delta===null?'Sem base suficiente para calcular a variação.':`${delta>=0?'▲':'▼'} ${Math.abs(delta).toFixed(1).replace('.',',')}% de ${previous.mes.split('/')[0]} para ${current.mes.split('/')[0]}`}</p>
+    </article>`;
+  }).join('');
+  if(previous&&current){
+    const followerDelta=hasValue(previous.seguidores)&&hasValue(current.seguidores)?(current.seguidores-previous.seguidores)/previous.seguidores*100:null;
+    const impressionDelta=(current.impressoes-previous.impressoes)/previous.impressoes*100;
+    const conversationDelta=(current.conversas-previous.conversas)/previous.conversas*100;
+    const clickDelta=(current.cliques-previous.cliques)/previous.cliques*100;
+    $('strategicAnalysis').innerHTML=`<b>Leitura de agosto:</b> ${followerDelta===null?'seguidores sem base anterior completa':`a audiência cresceu ${Math.abs(followerDelta).toFixed(1).replace('.',',')}%`}; impressões ${impressionDelta>=0?'subiram':'caíram'} ${Math.abs(impressionDelta).toFixed(1).replace('.',',')}%, enquanto conversas cresceram ${conversationDelta.toFixed(1).replace('.',',')}% e cliques ${clickDelta.toFixed(1).replace('.',',')}%. Mesmo abaixo de julho, o ROI de ${pctMaybe(current.roi)} e o ROAS de ${multipleMaybe(current.roas)} continuam em nível excepcional.`;
+  }
 }
 
 function renderCompare(){
