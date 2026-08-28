@@ -156,7 +156,7 @@ function formatInputMoney(value){
   return Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function updateFairSales(save=true){
-  const investment=154271.10,targets=[250000,500000,1000000];
+  const investment=139271.10,targets=[250000,500000,1000000];
   const sales=fairInputNumber($('fairSalesInput').value);
   $('fairSalesInput').value=formatInputMoney(sales);
   if(save)localStorage.setItem('expoconstruirSales',String(sales));
