@@ -14,6 +14,7 @@
   <nav class="module-tabs">
     <button class="module-tab active" data-panel="meta">📢 Meta Ads</button>
     <button class="module-tab" data-panel="war">🏗️ Sala de Guerra</button>
+    <button class="module-tab" data-panel="fairs">🎪 Feiras</button>
   </nav>
 
   <header class="hero">
@@ -186,6 +187,119 @@
         <h3>ALERTAS E PRÓXIMOS PASSOS</h3>
         <ul id="warAlerts"></ul>
       </section>
+    </section>
+  </section>
+
+
+  <section id="fairsPanel" class="panel-view hidden">
+    <div class="fair-selector">
+      <div>
+        <span class="eyebrow">PLANEJAMENTO E RETORNO</span>
+        <h3>Escolha a feira</h3>
+      </div>
+      <div class="fair-choice">
+        <button class="fair-option" data-fair="feicon">FEICON 2026</button>
+        <button class="fair-option active" data-fair="expoconstruir">EXPOCONSTRUIR 2026</button>
+      </div>
+    </div>
+
+    <section id="feiconFair" class="fair-view hidden">
+      <div class="fair-empty">
+        <span>FEICON 2026</span>
+        <h2>Planejamento ainda não iniciado</h2>
+        <p>Esta área está pronta para receber investimento, metas, leads, oportunidades e resultados da FEICON 2026.</p>
+      </div>
+    </section>
+
+    <section id="expoconstruirFair" class="fair-view">
+      <div class="fair-intro">
+        <div>
+          <span class="eyebrow">EXPOCONSTRUIR 2026</span>
+          <h2>Investimento × oportunidades</h2>
+          <p>Comparativo de retorno projetado com base no plano de captação, qualificação e conversão durante 120 dias de operação.</p>
+        </div>
+        <div class="fair-official-goal">
+          <small>META OFICIAL</small>
+          <strong>R$ 1 milhão</strong>
+          <span>em oportunidades qualificadas</span>
+        </div>
+      </div>
+
+      <div class="fair-top-grid">
+        <article class="investment-card">
+          <span>INVESTIMENTO TOTAL</span>
+          <strong>R$ 152.688,81</strong>
+          <div class="cost-line"><span>Locação da exposição</span><b>R$ 48.750,00</b></div>
+          <div class="cost-line"><span>Estande e Onda</span><b>R$ 88.500,00</b></div>
+          <div class="cost-line"><span>Seguro</span><b>R$ 438,81</b></div>
+          <div class="cost-line"><span>Marketing e brindes</span><b>R$ 15.000,00</b></div>
+        </article>
+
+        <article class="break-even-card">
+          <span>PONTO MÍNIMO DE RETORNO</span>
+          <strong>R$ 152.688,81</strong>
+          <h4>em vendas para recuperar o investimento</h4>
+          <div class="break-even-flow">
+            <div><small>Investido</small><b>R$ 152,7 mil</b></div>
+            <i>→</i>
+            <div><small>Meta oficial</small><b>R$ 1 milhão</b></div>
+          </div>
+          <p>A meta escolhida precisa gerar vendas suficientes para superar o valor investido. Na meta oficial, o pipeline projetado cobre o investimento em <b>6,55 vezes</b>.</p>
+        </article>
+      </div>
+
+      <div class="scenario-heading">
+        <div><span class="eyebrow">CENÁRIOS DE RETORNO</span><h3>Pipeline de oportunidades</h3></div>
+        <p>A meta oficial está destacada como direção principal.</p>
+      </div>
+
+      <div class="fair-scenarios">
+        <article class="scenario-card conservative">
+          <header><span>CONSERVADOR</span><strong>R$ 250 mil</strong></header>
+          <div class="scenario-stats">
+            <p><b>500</b><span>Leads</span></p><p><b>50</b><span>Leads A</span></p>
+            <p><b>20</b><span>Reuniões</span></p><p><b>10</b><span>Propostas</span></p>
+            <p><b>5</b><span>Negócios</span></p>
+          </div>
+          <footer><small>COBERTURA DO INVESTIMENTO</small><b>1,64x</b></footer>
+        </article>
+
+        <article class="scenario-card realistic">
+          <header><span>REALISTA</span><strong>R$ 500 mil</strong></header>
+          <div class="scenario-stats">
+            <p><b>500</b><span>Leads</span></p><p><b>100</b><span>Leads A</span></p>
+            <p><b>50</b><span>Reuniões</span></p><p><b>30</b><span>Propostas</span></p>
+            <p><b>10</b><span>Negócios</span></p>
+          </div>
+          <footer><small>COBERTURA DO INVESTIMENTO</small><b>3,27x</b></footer>
+        </article>
+
+        <article class="scenario-card official">
+          <div class="official-ribbon">★ META OFICIAL ★</div>
+          <header><span>OBJETIVO ESCOLHIDO</span><strong>R$ 1 milhão</strong></header>
+          <div class="scenario-stats">
+            <p><b>500</b><span>Leads</span></p><p><b>100</b><span>Leads A</span></p>
+            <p><b>60</b><span>Reuniões</span></p><p><b>40</b><span>Propostas</span></p>
+            <p><b>15</b><span>Negócios</span></p>
+          </div>
+          <footer><small>COBERTURA DO INVESTIMENTO</small><b>6,55x</b></footer>
+        </article>
+
+        <article class="scenario-card extraordinary">
+          <header><span>EXTRAORDINÁRIO</span><strong>R$ 1,5 milhão+</strong></header>
+          <div class="scenario-stats">
+            <p><b>500</b><span>Leads</span></p><p><b>120</b><span>Leads A</span></p>
+            <p><b>70</b><span>Reuniões</span></p><p><b>50</b><span>Propostas</span></p>
+            <p><b>20</b><span>Negócios</span></p>
+          </div>
+          <footer><small>COBERTURA DO INVESTIMENTO</small><b>9,82x</b></footer>
+        </article>
+      </div>
+
+      <div class="fair-executive-note">
+        <b>Leitura executiva</b>
+        <p>O investimento só se paga quando as vendas atribuídas à feira ultrapassarem <strong>R$ 152.688,81</strong>. A meta oficial não representa faturamento imediato: representa um pipeline de <strong>R$ 1 milhão</strong> que deverá ser trabalhado e convertido no pós-feira.</p>
+      </div>
     </section>
   </section>
 
