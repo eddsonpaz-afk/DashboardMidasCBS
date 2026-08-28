@@ -110,6 +110,9 @@ function init(){
   $('expoReset').onclick=()=>location.reload();
   $('printMeta').onclick=()=>window.print();
   $('printExpo').onclick=()=>window.print();
+  document.querySelectorAll('.fair-option').forEach(btn=>{
+    btn.onclick=()=>selectFair(btn.dataset.fair);
+  });
   renderMeta($('monthSelect').value);
   renderExpo();
 }
@@ -118,15 +121,26 @@ function switchPanel(panel){
   document.querySelectorAll('.module-tab').forEach(b=>b.classList.toggle('active',b.dataset.panel===panel));
   $('metaPanel').classList.toggle('hidden',panel!=='meta');
   $('warPanel').classList.toggle('hidden',panel!=='war');
+  $('fairsPanel').classList.toggle('hidden',panel!=='fairs');
   if(panel==='meta'){
     $('mainTitle').textContent='MÍDIAS';
     $('mainSub').textContent='Performance de marketing e vendas';
     $('mainDesc').textContent='Visão executiva • Funil de performance • Resultado comercial';
-  }else{
+  }else if(panel==='war'){
     $('mainTitle').textContent='DASHBOARD DA DIRETORIA';
     $('mainSub').textContent='SALA DE GUERRA';
-    $('mainDesc').textContent='VISÃO EXECUTIVA • EXPOCONSTRUIR 2026';
+    $('mainDesc').textContent='VISÃO EXECUTIVA • OPERAÇÃO COMERCIAL';
+  }else{
+    $('mainTitle').textContent='FEIRAS 2026';
+    $('mainSub').textContent='INVESTIMENTO E RETORNO';
+    $('mainDesc').textContent='CENÁRIOS • METAS • PIPELINE DE OPORTUNIDADES';
   }
+}
+
+function selectFair(fair){
+  document.querySelectorAll('.fair-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.fair===fair));
+  $('feiconFair').classList.toggle('hidden',fair!=='feicon');
+  $('expoconstruirFair').classList.toggle('hidden',fair!=='expoconstruir');
 }
 
 function renderMeta(key){
