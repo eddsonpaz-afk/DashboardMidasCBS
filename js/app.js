@@ -138,8 +138,8 @@ function renderMeta(key){
   $('executiveKpis').innerHTML=[
     ['💵','Vendas do mês',moneyMaybe(m.vendas),'Receita atribuída'],
     ['💰','Investimento',money(m.investimento),'Mídia no mês'],
-    ['📈','ROI',pctMaybe(m.roi),'Retorno líquido'],
-    ['🚀','ROAS',multipleMaybe(m.roas),'Receita por real']
+    ['📈','ROI',pctMaybe(m.roi),roiCardDetail(m)],
+    ['🚀','ROAS',multipleMaybe(m.roas),roasCardDetail(m)]
   ].map(kpiCard).join('');
 
   $('channelKpis').innerHTML=[
@@ -228,6 +228,16 @@ function renderMeta(key){
   makeChart('genderChart','doughnut',gen.map(g=>g.nome),[{data:gen.map(g=>g.participacao),backgroundColor:['#2563eb','#ec4899','#64748b']}],true);
 }
 
+function roiCardDetail(m){
+  if(!hasValue(m.roi))return 'Informe as vendas do mês';
+  return `${money(Number(m.roi)/100)} de ganho além de cada R$ 1 investido`;
+}
+
+function roasCardDetail(m){
+  if(!hasValue(m.roas))return 'Informe as vendas do mês';
+  return `Cada R$ 1 em mídia gerou ${money(m.roas)} em vendas`;
+}
+
 function roiAssessment(m){
   if(!hasValue(m.roi)||!hasValue(m.roas)){
     return `<b>Dados insuficientes</b><p>Informe as vendas do mês para avaliar o retorno.</p>`;
@@ -239,8 +249,9 @@ function roiAssessment(m){
   else if(roi>=100){status='Retorno saudável';tone='good';}
   else if(roi>=0){status='Retorno positivo';tone='positive';}
   return `<div class="assessment-head ${tone}"><i></i><b>${status}</b></div>
-    <p>Para cada R$ 1 investido, retornaram <strong>${multipleMaybe(m.roas)}</strong> em vendas.</p>
-    <small>Leitura baseada em vendas atribuídas à mídia, não em lucro líquido.</small>`;
+    <p><strong>ROI de ${pctMaybe(m.roi)}:</strong> representa ${money(Number(m.roi)/100)} de ganho além de cada R$ 1 investido.</p>
+    <p><strong>ROAS de ${multipleMaybe(m.roas)}:</strong> cada R$ 1 aplicado em mídia gerou ${money(m.roas)} em vendas.</p>
+    <small>O ROI exibido é uma estimativa baseada nas vendas atribuídas e no investimento em mídia. O lucro líquido real exige custos, impostos e despesas operacionais.</small>`;
 }
 
 function kpiCard([icon,label,value,small]){
