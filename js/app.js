@@ -113,6 +113,11 @@ function init(){
   document.querySelectorAll('.fair-option').forEach(btn=>{
     btn.onclick=()=>selectFair(btn.dataset.fair);
   });
+  const fairSavedSales=localStorage.getItem('expoconstruirSales');
+  if(fairSavedSales)$('fairSalesInput').value=formatInputMoney(Number(fairSavedSales));
+  $('fairSalesApply').onclick=()=>updateFairSales();
+  $('fairSalesInput').onkeydown=e=>{if(e.key==='Enter')updateFairSales();};
+  updateFairSales(false);
   renderMeta($('monthSelect').value);
   renderExpo();
 }
@@ -141,6 +146,47 @@ function selectFair(fair){
   document.querySelectorAll('.fair-option').forEach(btn=>btn.classList.toggle('active',btn.dataset.fair===fair));
   $('feiconFair').classList.toggle('hidden',fair!=='feicon');
   $('expoconstruirFair').classList.toggle('hidden',fair!=='expoconstruir');
+}
+
+function fairInputNumber(value){
+  const clean=String(value||'').replace(/[^0-9,.-]/g,'');
+  return Number(clean.includes(',')?clean.replace(/\./g,'').replace(',','.'):clean)||0;
+}
+function formatInputMoney(value){
+  return Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function updateFairSales(save=true){
+  const investment=152688.81,targets=[250000,500000,1000000];
+  const sales=fairInputNumber($('fairSalesInput').value);
+  $('fairSalesInput').value=formatInputMoney(sales);
+  if(save)localStorage.setItem('expoconstruirSales',String(sales));
+  const net=sales-investment;
+  const roi=investment?net/investment*100:0;
+  const ratio=investment?sales/investment:0;
+  $('fairReturnSummary').innerHTML=`
+    <div><small>Vendas acumuladas</small><b>${money(sales)}</b></div>
+    <div class="${net>=0?'positive':''}"><small>Retorno após investimento</small><b>${money(net)}</b></div>
+    <div class="${roi>=0?'positive':''}"><small>ROI da feira</small><b>${pct(roi)} • ${ratio.toFixed(2).replace('.',',')}x</b></div>`;
+  const cards=[...document.querySelectorAll('[data-sales-target]')];
+  let currentIndex=targets.findIndex(target=>sales<target);
+  if(currentIndex<0)currentIndex=targets.length-1;
+  cards.forEach((card,index)=>{
+    const target=targets[index],gap=target-sales,reached=sales>=target;
+    card.classList.toggle('reached',reached);
+    card.classList.toggle('current',index===currentIndex);
+    card.querySelector('.scenario-position').textContent=reached?'✓ NÍVEL ALCANÇADO':index===currentIndex?'VOCÊ ESTÁ AQUI':'PRÓXIMO NÍVEL';
+    const footer=card.querySelector('footer');
+    let gapEl=footer.querySelector('.scenario-gap');
+    if(!gapEl){gapEl=document.createElement('span');gapEl.className='scenario-gap';footer.appendChild(gapEl);}
+    gapEl.textContent=reached?`Superado em ${money(Math.abs(gap))}`:`Faltam ${money(gap)}`;
+  });
+  const progress=Math.min(sales/targets[2]*100,100);
+  $('fairProgressBar').style.width=`${progress}%`;
+  $('fairProgressLabel').textContent=`${pct(progress)} • faltam ${money(Math.max(targets[2]-sales,0))}`;
+  const next=targets.find(target=>sales<target);
+  $('fairExecutiveAnalysis').innerHTML=net>=0
+    ?`As vendas acumuladas são de <strong>${money(sales)}</strong>. Depois de descontar o investimento de <strong>${money(investment)}</strong>, o retorno é de <strong>${money(net)}</strong>, com ROI de <strong>${pct(roi)}</strong> e relação venda/investimento de <strong>${ratio.toFixed(2).replace('.',',')}x</strong>. ${next?`O próximo nível exige mais <strong>${money(next-sales)}</strong> em vendas.`:'A meta oficial foi alcançada.'}`
+    :`As vendas acumuladas são de <strong>${money(sales)}</strong>. Ainda faltam <strong>${money(Math.abs(net))}</strong> para recuperar o investimento de <strong>${money(investment)}</strong>.`;
 }
 
 function renderMeta(key){
