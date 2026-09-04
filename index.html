@@ -237,12 +237,11 @@
 
         <article class="break-even-card">
           <span>VENDAS REALIZADAS ATÉ AGORA</span>
-          <div class="fair-sales-input">
+          <div class="fair-sales-input fair-sales-readonly">
             <span>R$</span>
-            <input id="fairSalesInput" type="text" inputmode="decimal" value="277.088,58" aria-label="Valor vendido na EXPOCONSTRUIR">
-            <button id="fairSalesApply">Atualizar análise</button>
+            <input id="fairSalesInput" type="text" value="0,00" readonly aria-label="Total vendido na EXPOCONSTRUIR">
           </div>
-          <small class="fair-save-note">O valor fica salvo neste navegador e todas as análises são recalculadas.</small>
+          <small class="fair-save-note">● Total sincronizado automaticamente com a aba Feiras do Google Sheets.</small>
           <div id="fairReturnSummary" class="fair-return-summary"></div>
         </article>
       </div>
@@ -292,6 +291,14 @@
         <div class="fair-progress-heading"><span>PROGRESSO ATÉ A META OFICIAL</span><b id="fairProgressLabel"></b></div>
         <div class="fair-progress-track"><i id="fairProgressBar"></i></div>
       </div>
+
+      <section class="fair-sales-list">
+        <div class="scenario-heading">
+          <div><span class="eyebrow">VENDAS DA FEIRA</span><h3>Clientes e valores</h3></div>
+          <p>Preencha o nome na planilha e ele aparecerá aqui automaticamente.</p>
+        </div>
+        <div id="fairSalesTable" class="campaign-table"></div>
+      </section>
 
       <div class="fair-executive-note">
         <b>Leitura executiva</b>
