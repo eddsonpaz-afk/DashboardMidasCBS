@@ -10,7 +10,7 @@ const moneyMaybe=v=>hasValue(v)?money(v):'Não informado';
 const numberMaybe=v=>hasValue(v)?number(v):'Não informado';
 const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
-let META, EXPO, charts={};
+let META, EXPO, FAIR_SALES=[], charts={};
 
 const GOOGLE_SHEET_ID='10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego';
 
@@ -23,6 +23,7 @@ Promise.all([
   try{
     const sheetData=await loadGoogleSheetData();
     META=MidasMetaParser.mergeMetaData(META,sheetData);
+    FAIR_SALES=sheetData.feiraVendas||[];
     window.__midasSheetOnline=true;
   }catch(error){
     console.warn('Google Sheets indisponível; usando base de segurança.',error);
@@ -43,9 +44,9 @@ async function fetchGoogleSheetRows(sheet){
 }
 
 async function loadGoogleSheetData(){
-  const [monthlyRows,campaignRows,ageRows,genderRows]=await Promise.all([
+  const [monthlyRows,campaignRows,ageRows,genderRows,fairRows]=await Promise.all([
     fetchGoogleSheetRows('Resumo Mensal'),fetchGoogleSheetRows('Campanhas'),
-    fetchGoogleSheetRows('Idade'),fetchGoogleSheetRows('Gênero')
+    fetchGoogleSheetRows('Idade'),fetchGoogleSheetRows('Gênero'),fetchGoogleSheetRows('Feiras')
   ]);
   const maybe=v=>String(v??'').trim()===''?null:MidasMetaParser.toNumber(v);
   const key=row=>MidasMetaParser.monthKey(row['Mês']||row['Chave'])||String(row['Chave']||'').trim();
@@ -68,8 +69,14 @@ async function loadGoogleSheetData(){
   const genero=genderRows.filter(row=>row['Chave']&&row['Gênero']).map(row=>({
     mes:key(row),nome:row['Gênero'],participacao:maybe(row['Participação'])||0,cpa:maybe(row['CPA'])||0
   }));
+  const feiraVendas=fairRows.filter(row=>row['Feira']&&row['Código do cliente']).map(row=>({
+    feira:String(row['Feira']).trim(),
+    codigo:String(row['Código do cliente']).trim(),
+    cliente:String(row['Nome do cliente']||'Não informado').trim()||'Não informado',
+    valor:maybe(row['Valor da venda'])||0
+  }));
   if(!meses.length)throw new Error('nenhum mês encontrado');
-  return {meses,campanhas,idade,genero,sourceSheets:['Google Sheets']};
+  return {meses,campanhas,idade,genero,feiraVendas,sourceSheets:['Google Sheets']};
 }
 
 function parseCsv(text){
@@ -113,11 +120,7 @@ function init(){
   document.querySelectorAll('.fair-option').forEach(btn=>{
     btn.onclick=()=>selectFair(btn.dataset.fair);
   });
-  const fairSavedSales=localStorage.getItem('expoconstruirSales');
-  if(fairSavedSales)$('fairSalesInput').value=formatInputMoney(Number(fairSavedSales));
-  $('fairSalesApply').onclick=()=>updateFairSales();
-  $('fairSalesInput').onkeydown=e=>{if(e.key==='Enter')updateFairSales();};
-  updateFairSales(false);
+  updateFairSales();
   renderMeta($('monthSelect').value);
   renderExpo();
 }
@@ -148,18 +151,14 @@ function selectFair(fair){
   $('expoconstruirFair').classList.toggle('hidden',fair!=='expoconstruir');
 }
 
-function fairInputNumber(value){
-  const clean=String(value||'').replace(/[^0-9,.-]/g,'');
-  return Number(clean.includes(',')?clean.replace(/\./g,'').replace(',','.'):clean)||0;
-}
 function formatInputMoney(value){
   return Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
-function updateFairSales(save=true){
+function updateFairSales(){
   const investment=139271.10,targets=[250000,500000,1000000];
-  const sales=fairInputNumber($('fairSalesInput').value);
+  const salesRows=FAIR_SALES.filter(item=>item.feira.toUpperCase().includes('EXPOCONSTRUIR'));
+  const sales=salesRows.reduce((total,item)=>total+Number(item.valor||0),0);
   $('fairSalesInput').value=formatInputMoney(sales);
-  if(save)localStorage.setItem('expoconstruirSales',String(sales));
   const net=sales-investment;
   const roi=investment?net/investment*100:0;
   const ratio=investment?sales/investment:0;
@@ -183,6 +182,11 @@ function updateFairSales(save=true){
   const progress=Math.min(sales/targets[2]*100,100);
   $('fairProgressBar').style.width=`${progress}%`;
   $('fairProgressLabel').textContent=`${pct(progress)} • faltam ${money(Math.max(targets[2]-sales,0))}`;
+  $('fairSalesTable').innerHTML=`<table class="table">
+    <thead><tr><th>Código</th><th>Nome do cliente</th><th>Valor da venda</th></tr></thead>
+    <tbody>${salesRows.map(item=>`<tr><td>${item.codigo}</td><td>${item.cliente}</td><td>${money(item.valor)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="2">Total das vendas</td><td>${money(sales)}</td></tr></tfoot>
+  </table>`;
   const next=targets.find(target=>sales<target);
   $('fairExecutiveAnalysis').innerHTML=net>=0
     ?`As vendas acumuladas são de <strong>${money(sales)}</strong>. Depois de descontar o investimento de <strong>${money(investment)}</strong>, o retorno é de <strong>${money(net)}</strong>, com ROI de <strong>${pct(roi)}</strong> e relação venda/investimento de <strong>${ratio.toFixed(2).replace('.',',')}x</strong>. ${next?`O próximo nível exige mais <strong>${money(next-sales)}</strong> em vendas.`:'A meta oficial foi alcançada.'}`
