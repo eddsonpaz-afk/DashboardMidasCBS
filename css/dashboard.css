@@ -1515,3 +1515,10 @@ body{
 .fair-progress-heading{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-size:12px;font-weight:900}.fair-progress-heading b{color:var(--cyan)}
 .fair-progress-track{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.fair-progress-track i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#22c55e,#facc15,#22d3ee);transition:width .6s ease}
 @media(max-width:760px){.fair-sales-input{grid-template-columns:auto 1fr}.fair-sales-input button{grid-column:1/-1}.fair-return-summary{grid-template-columns:1fr}}
+
+.fair-sales-readonly{grid-template-columns:auto minmax(150px,1fr)}
+.fair-sales-readonly input{color:#86efac;border-color:rgba(34,197,94,.4);cursor:default}
+.fair-sales-list{margin-top:16px;border:1px solid rgba(34,211,238,.22);border-radius:18px;padding:14px;background:rgba(7,16,28,.72)}
+.fair-sales-list .scenario-heading{border:0;padding:6px 4px 14px;background:none;margin:0}
+.fair-sales-list .campaign-table{max-height:none}
+.fair-sales-list .table td:last-child,.fair-sales-list .table th:last-child{text-align:right}
