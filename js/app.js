@@ -468,7 +468,10 @@ function renderStrategicCompare(){
     const followerDelta=change('seguidores'),salesDelta=change('vendas'),leadDelta=change('leadsTrabalhados');
     const impressionDelta=change('impressoes'),conversationDelta=change('conversas'),clickDelta=change('cliques'),cpaDelta=change('cpa');
     const part=(label,value,goodWord,badWord)=>value===null?`${label} sem base completa`:`${label} ${value>=0?goodWord:badWord} ${Math.abs(value).toFixed(1).replace('.',',')}%`;
-    $('strategicAnalysis').innerHTML=`<b>Leitura de ${current.mes.split('/')[0]}:</b> ${part('a audiência',followerDelta,'cresceu','caiu')}; ${part('os leads',leadDelta,'cresceram','caíram')}; ${part('as conversas',conversationDelta,'cresceram','caíram')} e ${part('os cliques',clickDelta,'subiram','caíram')}. ${part('O CPA',cpaDelta,'subiu','caiu')} e ${part('as vendas',salesDelta,'cresceram','caíram')}. Mesmo abaixo do mês anterior, o ROI de ${pctMaybe(current.roi)} e o ROAS de ${multipleMaybe(current.roas)} continuam em nível excepcional.`;
+    const returnReading=hasValue(current.roi)&&hasValue(current.roas)
+      ?`O ROI de ${pctMaybe(current.roi)} e o ROAS de ${multipleMaybe(current.roas)} indicam ${Number(current.roi)>=1000?'retorno excepcional':Number(current.roi)>=300?'retorno muito bom':Number(current.roi)>=100?'retorno saudável':'retorno positivo'}.`
+      :'As vendas ainda não foram informadas; por isso, ROI e ROAS permanecem em aberto.';
+    $('strategicAnalysis').innerHTML=`<b>Leitura de ${current.mes.split('/')[0]}:</b> ${part('a audiência',followerDelta,'cresceu','caiu')}; ${part('os leads',leadDelta,'cresceram','caíram')}; ${part('as conversas',conversationDelta,'cresceram','caíram')} e ${part('os cliques',clickDelta,'subiram','caíram')}. ${part('O CPA',cpaDelta,'subiu','caiu')} e ${part('as vendas',salesDelta,'cresceram','caíram')}. ${returnReading}`;
   }
 }
 
