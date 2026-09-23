@@ -106,7 +106,7 @@ function init(){
     btn.onclick=()=>switchPanel(btn.dataset.panel);
   });
   refreshMonthSelect();
-  $('monthSelect').onchange=()=>renderMeta($('monthSelect').value);
+  $('monthSelect').onchange=()=>{renderMeta($('monthSelect').value);renderResults($('monthSelect').value);};
   const sync=$('metaSyncStatus');
   if(sync){
     sync.classList.toggle('success',Boolean(window.__midasSheetOnline));
@@ -122,18 +122,25 @@ function init(){
   });
   updateFairSales();
   renderMeta($('monthSelect').value);
+  renderResults($('monthSelect').value);
   renderExpo();
 }
 
 function switchPanel(panel){
   document.querySelectorAll('.module-tab').forEach(b=>b.classList.toggle('active',b.dataset.panel===panel));
   $('metaPanel').classList.toggle('hidden',panel!=='meta');
+  $('resultsPanel').classList.toggle('hidden',panel!=='results');
   $('warPanel').classList.toggle('hidden',panel!=='war');
   $('fairsPanel').classList.toggle('hidden',panel!=='fairs');
   if(panel==='meta'){
     $('mainTitle').textContent='MÍDIAS';
     $('mainSub').textContent='Performance de marketing e vendas';
     $('mainDesc').textContent='Visão executiva • Funil de performance • Resultado comercial';
+  }else if(panel==='results'){
+    $('mainTitle').textContent='RESULTADOS';
+    $('mainSub').textContent='Marketing conectado às vendas';
+    $('mainDesc').textContent='INVESTIMENTO • LEADS • CONVERSAS • RECEITA • RETORNO';
+    renderResults($('monthSelect').value);
   }else if(panel==='war'){
     $('mainTitle').textContent='DASHBOARD DA DIRETORIA';
     $('mainSub').textContent='SALA DE GUERRA';
@@ -143,6 +150,50 @@ function switchPanel(panel){
     $('mainSub').textContent='INVESTIMENTO E RETORNO';
     $('mainDesc').textContent='CENÁRIOS • METAS • PIPELINE DE OPORTUNIDADES';
   }
+}
+
+function renderResults(key){
+  const m=META?.meses?.find(x=>x.chave===key)||META?.meses?.[META.meses.length-1];
+  if(!m||!$('resultsKpis'))return;
+  const hasSales=hasValue(m.vendas);
+  const leadToConversation=hasValue(m.leadsTrabalhados)&&Number(m.leadsTrabalhados)>0
+    ?Number(m.conversas||0)/Number(m.leadsTrabalhados)*100:null;
+  const costPerLead=hasValue(m.leadsTrabalhados)&&Number(m.leadsTrabalhados)>0
+    ?Number(m.investimento||0)/Number(m.leadsTrabalhados):null;
+  $('resultsStatus').innerHTML=hasSales
+    ?`<span class="status-dot online"></span><div><small>Resultado registrado</small><strong>${m.mes}</strong></div>`
+    :`<span class="status-dot pending"></span><div><small>Aguardando venda do mês</small><strong>${m.mes}</strong></div>`;
+  $('resultsKpis').innerHTML=[
+    ['Investimento',money(m.investimento),'Mídia paga','cyan'],
+    ['Leads trabalhados',numberMaybe(m.leadsTrabalhados),'Base comercial','blue'],
+    ['Conversas',number(m.conversas),'WhatsApp','violet'],
+    ['Vendas',moneyMaybe(m.vendas),'Receita atribuída','green'],
+    ['ROAS',multipleMaybe(m.roas),'Receita por real','gold'],
+    ['ROI',pctMaybe(m.roi),'Retorno estimado','pink']
+  ].map(([label,value,sub,tone])=>`<article class="result-kpi ${tone}"><span>${label}</span><b>${value}</b><small>${sub}</small></article>`).join('');
+  const steps=[
+    ['Investimento',money(m.investimento)],
+    ['Impressões',number(m.impressoes)],
+    ['Cliques',number(m.cliques)],
+    ['Conversas',number(m.conversas)],
+    ['Leads trabalhados',numberMaybe(m.leadsTrabalhados)],
+    ['Vendas',moneyMaybe(m.vendas)]
+  ];
+  $('resultsPath').innerHTML=steps.map((s,i)=>`<div class="result-step"><i>${String(i+1).padStart(2,'0')}</i><span>${s[0]}</span><b>${s[1]}</b></div>`).join('');
+  const salesText=hasSales
+    ?`As vendas atribuídas chegaram a <strong>${money(m.vendas)}</strong>. O ROAS foi de <strong>${multipleMaybe(m.roas)}</strong> e o ROI estimado de <strong>${pctMaybe(m.roi)}</strong>.`
+    :`O desempenho de mídia já está consolidado, mas a venda do mês ainda não foi informada. Sem esse valor, ROI e ROAS não devem ser apresentados como resultado fechado.`;
+  $('resultsReading').innerHTML=`
+    <p>${salesText}</p>
+    <div class="result-reading-list">
+      <div><span>Custo por conversa</span><b>${money(m.cpa)}</b></div>
+      <div><span>Custo estimado por lead</span><b>${costPerLead===null?'Não informado':money(costPerLead)}</b></div>
+      <div><span>Conversas ÷ leads trabalhados</span><b>${leadToConversation===null?'Não informado':pct(leadToConversation)}</b></div>
+      <div><span>Taxa de clique</span><b>${pct(m.ctr)}</b></div>
+    </div>
+    <small class="result-disclaimer">ROI e ROAS usam vendas atribuídas e investimento em mídia. O lucro líquido exige custos, impostos e despesas operacionais.</small>`;
+  const months=META.meses.slice(-3);
+  $('resultsHistory').innerHTML=`<div class="results-history-table"><table class="table"><thead><tr><th>Mês</th><th>Investimento</th><th>Leads</th><th>Conversas</th><th>Vendas</th><th>ROAS</th><th>ROI</th></tr></thead><tbody>${months.map(x=>`<tr><td><strong>${x.mes}</strong></td><td>${money(x.investimento)}</td><td>${numberMaybe(x.leadsTrabalhados)}</td><td>${number(x.conversas)}</td><td>${moneyMaybe(x.vendas)}</td><td>${multipleMaybe(x.roas)}</td><td>${pctMaybe(x.roi)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function selectFair(fair){
@@ -502,8 +553,8 @@ function makeChart(id,type,labels,datasets,noScales=false){
   const ctx=$(id);
   charts[id]=new Chart(ctx,{type,data:{labels,datasets},options:{
     responsive:true,
-    plugins:{legend:{labels:{color:'#fff',font:{weight:'bold'}}}},
-    scales:noScales||type==='doughnut'?{}:{x:{ticks:{color:'#fff'},grid:{color:'rgba(255,255,255,.08)'}},y:{ticks:{color:'#fff'},grid:{color:'rgba(255,255,255,.08)'}}}
+    plugins:{legend:{labels:{color:'#29415f',font:{weight:'bold'}}}},
+    scales:noScales||type==='doughnut'?{}:{x:{ticks:{color:'#526982'},grid:{color:'rgba(45,77,111,.10)'}},y:{ticks:{color:'#526982'},grid:{color:'rgba(45,77,111,.10)'}}}
   }});
 }
 
