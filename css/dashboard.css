@@ -1622,6 +1622,54 @@ body{
 .scenario-card{background:linear-gradient(180deg,color-mix(in srgb,var(--scenario) 8%,#fff),#fff 58%)}
 .scenario-card footer{background:rgba(70,104,140,.05)}
 
+/* Remove os últimos blocos pesados do tema anterior */
+#metaPanel>.control-bar{
+  border-color:rgba(70,104,140,.16);
+  background:rgba(255,255,255,.92);
+  box-shadow:0 12px 32px rgba(38,78,118,.10);
+}
+#metaPanel>.control-bar:before{color:#60758d}
+#metaPanel>.control-bar #monthSelect{
+  border-color:rgba(37,99,235,.22);
+  background:#f2f7fd;
+  color:#17324f;
+}
+.executive-kpis .kpi-card,
+.channel-kpis .kpi-card,
+.commercial-kpis .kpi-card,
+.sales-month-card{
+  color:#17324f;
+  border:1px solid rgba(70,104,140,.14);
+  background:linear-gradient(145deg,#ffffff,#f2f7fd);
+  box-shadow:0 12px 28px rgba(38,78,118,.08),inset 0 1px 0 #fff;
+}
+.executive-kpis .kpi-card b,
+.channel-kpis .kpi-card b,
+.commercial-kpis .kpi-card b,
+.sales-month-card b{color:#10243d}
+.executive-kpis .kpi-card span,
+.channel-kpis .kpi-card span,
+.commercial-kpis .kpi-card span,
+.sales-month-card span{color:#60758d}
+.embedded-chart,.efficiency-panel,.sales-chart-panel,
+.flow-content>#funnelResult,.flow-insights{
+  color:#17324f;
+  border-color:rgba(70,104,140,.14);
+  background:rgba(255,255,255,.90);
+  box-shadow:0 12px 28px rgba(38,78,118,.07);
+}
+.flow-deck .funnel-step,
+.flow-deck .funnel-step:nth-child(n){
+  color:#17324f;
+  border-color:rgba(37,99,235,.16);
+  background:linear-gradient(135deg,#eef6ff,#ffffff);
+  box-shadow:0 8px 22px rgba(38,78,118,.07);
+}
+.flow-deck .funnel-step span{color:#60758d}
+.flow-deck .funnel-step b{color:#10243d}
+.flow-deck .funnel-step:not(:last-child):before{color:#38a9e8;text-shadow:none}
+.efficiency-value b{color:#10243d}.efficiency-value span{color:#60758d}
+
 @media(max-width:1100px){.results-kpis{grid-template-columns:repeat(3,1fr)}.results-grid{grid-template-columns:1fr}.hero{grid-template-columns:130px 1fr 130px}}
 @media(max-width:720px){
   .shell{padding:8px 8px 30px}.module-tabs{position:sticky;top:4px;width:100%;overflow:auto;justify-content:flex-start}.module-tab{flex:0 0 auto;font-size:11px}
