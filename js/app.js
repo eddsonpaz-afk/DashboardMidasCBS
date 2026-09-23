@@ -120,6 +120,14 @@ function init(){
   document.querySelectorAll('.fair-option').forEach(btn=>{
     btn.onclick=()=>selectFair(btn.dataset.fair);
   });
+  if($('aiAsk')){
+    $('aiAsk').onclick=()=>runAiSearch($('aiQuestion').value);
+    $('aiQuestion').onkeydown=e=>{if(e.key==='Enter')runAiSearch(e.currentTarget.value);};
+    document.querySelectorAll('[data-ai-question]').forEach(btn=>btn.onclick=()=>{
+      $('aiQuestion').value=btn.dataset.aiQuestion;
+      runAiSearch(btn.dataset.aiQuestion);
+    });
+  }
   updateFairSales();
   renderMeta($('monthSelect').value);
   renderResults($('monthSelect').value);
@@ -130,6 +138,7 @@ function switchPanel(panel){
   document.querySelectorAll('.module-tab').forEach(b=>b.classList.toggle('active',b.dataset.panel===panel));
   $('metaPanel').classList.toggle('hidden',panel!=='meta');
   $('resultsPanel').classList.toggle('hidden',panel!=='results');
+  $('aiPanel').classList.toggle('hidden',panel!=='ai');
   $('warPanel').classList.toggle('hidden',panel!=='war');
   $('fairsPanel').classList.toggle('hidden',panel!=='fairs');
   if(panel==='meta'){
@@ -141,6 +150,10 @@ function switchPanel(panel){
     $('mainSub').textContent='Marketing conectado às vendas';
     $('mainDesc').textContent='INVESTIMENTO • LEADS • CONVERSAS • RECEITA • RETORNO';
     renderResults($('monthSelect').value);
+  }else if(panel==='ai'){
+    $('mainTitle').textContent='PESQUISA IA';
+    $('mainSub').textContent='Pergunte aos dados do dashboard';
+    $('mainDesc').textContent='ANÁLISE • COMPARAÇÃO • DECISÃO';
   }else if(panel==='war'){
     $('mainTitle').textContent='DASHBOARD DA DIRETORIA';
     $('mainSub').textContent='SALA DE GUERRA';
@@ -150,6 +163,43 @@ function switchPanel(panel){
     $('mainSub').textContent='INVESTIMENTO E RETORNO';
     $('mainDesc').textContent='CENÁRIOS • METAS • PIPELINE DE OPORTUNIDADES';
   }
+}
+
+function runAiSearch(rawQuestion){
+  const question=String(rawQuestion||'').trim();
+  if(!question)return;
+  const normalized=question.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const months=(META?.meses||[]).filter(Boolean);
+  const valid=(field)=>months.filter(m=>hasValue(m[field]));
+  const best=(field)=>valid(field).sort((a,b)=>Number(b[field])-Number(a[field]))[0];
+  const latest=months[months.length-1];
+  let title='Análise encontrada',answer='';
+  if(normalized.includes('venda')){
+    const m=best('vendas'); title='Maior resultado em vendas';
+    answer=m?`<strong>${m.mes}</strong> teve o maior valor registrado: <strong>${money(m.vendas)}</strong>. O ROAS foi ${multipleMaybe(m.roas)} e o ROI ${pctMaybe(m.roi)}.`:'Ainda não há vendas registradas na base.';
+  }else if(normalized.includes('roas')){
+    const m=best('roas'); title='Melhor ROAS';
+    answer=m?`O melhor ROAS foi em <strong>${m.mes}</strong>: <strong>${multipleMaybe(m.roas)}</strong>. Isso significa ${money(m.roas)} em vendas para cada R$ 1 investido.`:'Não há dados suficientes para calcular o ROAS.';
+  }else if(normalized.includes('roi')){
+    const m=best('roi'); title='Melhor ROI';
+    answer=m?`O maior ROI foi em <strong>${m.mes}</strong>: <strong>${pctMaybe(m.roi)}</strong>, com ${money(m.vendas)} em vendas sobre ${money(m.investimento)} investidos.`:'Não há dados suficientes para calcular o ROI.';
+  }else if(normalized.includes('conversa')){
+    const m=best('conversas'); title='Maior volume de conversas';
+    answer=m?`<strong>${m.mes}</strong> lidera com <strong>${number(m.conversas)} conversas</strong> e custo médio de ${money(m.cpa)} por conversa.`:'Não há conversas registradas.';
+  }else if(normalized.includes('clique')){
+    const m=best('cliques'); title='Maior volume de cliques';
+    answer=m?`<strong>${m.mes}</strong> teve <strong>${number(m.cliques)} cliques</strong>, CTR de ${pct(m.ctr)} e CPC de ${money(m.cpc)}.`:'Não há cliques registrados.';
+  }else if(normalized.includes('invest')){
+    const m=best('investimento'); title='Maior investimento';
+    answer=m?`O maior investimento foi em <strong>${m.mes}</strong>: <strong>${money(m.investimento)}</strong>. Foram ${number(m.impressoes)} impressões e ${number(m.conversas)} conversas.`:'Não há investimentos registrados.';
+  }else if(normalized.includes('3 meses')||normalized.includes('compare')||normalized.includes('compar')){
+    const last=months.slice(-3); title='Comparativo dos últimos três meses';
+    answer=last.map(m=>`<strong>${m.mes}:</strong> ${money(m.investimento)} investidos, ${number(m.conversas)} conversas, ${moneyMaybe(m.vendas)} em vendas e ROI ${pctMaybe(m.roi)}.`).join('<br>');
+  }else{
+    title=`Resumo de ${latest?.mes||'dados atuais'}`;
+    answer=latest?`Foram investidos <strong>${money(latest.investimento)}</strong>, gerando <strong>${number(latest.impressoes)} impressões</strong>, <strong>${number(latest.cliques)} cliques</strong> e <strong>${number(latest.conversas)} conversas</strong>. Vendas: <strong>${moneyMaybe(latest.vendas)}</strong>; ROI: <strong>${pctMaybe(latest.roi)}</strong>.`:'A base ainda não foi carregada.';
+  }
+  $('aiAnswer').innerHTML=`<div class="ai-answer-icon">✦</div><div><small>ANÁLISE MÍDIAS</small><h3>${title}</h3><p>${answer}</p></div>`;
 }
 
 function renderResults(key){
