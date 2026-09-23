@@ -13,6 +13,7 @@
 <main class="shell">
   <nav class="module-tabs">
     <button class="module-tab active" data-panel="meta">📢 Meta Ads</button>
+    <button class="module-tab" data-panel="results">📈 Resultados</button>
     <button class="module-tab" data-panel="war">🏗️ Sala de Guerra</button>
     <button class="module-tab" data-panel="fairs">🎪 Feiras</button>
   </nav>
@@ -139,6 +140,40 @@
         <h3>COMPARATIVO MÊS A MÊS — ÚLTIMOS 3 MESES</h3>
         <div id="monthCompare" class="month-compare-row"></div>
       </section>
+    </section>
+  </section>
+
+  <section id="resultsPanel" class="panel-view hidden">
+    <div class="control-bar results-control">
+      <div><span class="eyebrow">MARKETING → COMERCIAL</span><strong>Resultado consolidado do mês</strong></div>
+      <a class="crm-link" href="https://waves-performance-comercial.vercel.app/?wa=crm-cbs-v3" target="_blank" rel="noopener">Abrir CRM Comercial ↗</a>
+    </div>
+
+    <section class="results-hero">
+      <div>
+        <span class="eyebrow">VISÃO DE RESULTADO</span>
+        <h2>Do investimento à venda</h2>
+        <p>Uma leitura direta do que o marketing gerou e do retorno financeiro registrado.</p>
+      </div>
+      <div id="resultsStatus" class="results-status"></div>
+    </section>
+
+    <section id="resultsKpis" class="results-kpis"></section>
+
+    <section class="results-grid">
+      <article class="card result-path-card">
+        <div class="section-label"><span>01</span><div><b>Jornada do resultado</b><small>Da mídia ao comercial</small></div></div>
+        <div id="resultsPath" class="results-path"></div>
+      </article>
+      <article class="card result-reading-card">
+        <div class="section-label"><span>02</span><div><b>Leitura executiva</b><small>O que os números dizem</small></div></div>
+        <div id="resultsReading"></div>
+      </article>
+    </section>
+
+    <section class="card results-history-card">
+      <div class="section-label"><span>03</span><div><b>Histórico de resultados</b><small>Últimos três meses</small></div></div>
+      <div id="resultsHistory"></div>
     </section>
   </section>
 
