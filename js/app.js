@@ -182,7 +182,7 @@ function runAiSearch(rawQuestion){
     answer=m?`O melhor ROAS foi em <strong>${m.mes}</strong>: <strong>${multipleMaybe(m.roas)}</strong>. Isso significa ${money(m.roas)} em vendas para cada R$ 1 investido.`:'Não há dados suficientes para calcular o ROAS.';
   }else if(normalized.includes('roi')){
     const m=best('roi'); title='Melhor ROI';
-    answer=m?`O maior ROI foi em <strong>${m.mes}</strong>: <strong>${pctMaybe(m.roi)}</strong>, com ${money(m.vendas)} em vendas sobre ${money(m.investimento)} investidos.`:'Não há dados suficientes para calcular o ROI.';
+    answer=m?`O maior ROI de mídia foi em <strong>${m.mes}</strong>: <strong>${pctMaybe(m.roi)}</strong>, com ${money(m.vendas)} em vendas atribuídas sobre ${money(m.investimento)} investidos em mídia.`:'Não há dados suficientes para calcular o ROI de mídia.';
   }else if(normalized.includes('conversa')){
     const m=best('conversas'); title='Maior volume de conversas';
     answer=m?`<strong>${m.mes}</strong> lidera com <strong>${number(m.conversas)} conversas</strong> e custo médio de ${money(m.cpa)} por conversa.`:'Não há conversas registradas.';
@@ -219,7 +219,7 @@ function renderResults(key){
     ['Conversas',number(m.conversas),'WhatsApp','violet'],
     ['Vendas',moneyMaybe(m.vendas),'Receita atribuída','green'],
     ['ROAS',multipleMaybe(m.roas),'Receita por real','gold'],
-    ['ROI',pctMaybe(m.roi),'Retorno estimado','pink']
+    ['ROI de mídia',pctMaybe(m.roi),'Retorno estimado','pink']
   ].map(([label,value,sub,tone])=>`<article class="result-kpi ${tone}"><span>${label}</span><b>${value}</b><small>${sub}</small></article>`).join('');
   const steps=[
     ['Investimento',money(m.investimento)],
@@ -241,9 +241,9 @@ function renderResults(key){
       <div><span>Conversas ÷ leads trabalhados</span><b>${leadToConversation===null?'Não informado':pct(leadToConversation)}</b></div>
       <div><span>Taxa de clique</span><b>${pct(m.ctr)}</b></div>
     </div>
-    <small class="result-disclaimer">ROI e ROAS usam vendas atribuídas e investimento em mídia. O lucro líquido exige custos, impostos e despesas operacionais.</small>`;
+    <small class="result-disclaimer"><strong>ROI de mídia = (vendas atribuídas − investimento em mídia) ÷ investimento em mídia.</strong> Ele mede o retorno da verba de anúncios, não o lucro líquido da empresa. O lucro real exige custos dos produtos, impostos, equipe e demais despesas.</small>`;
   const months=META.meses.slice(-3);
-  $('resultsHistory').innerHTML=`<div class="results-history-table"><table class="table"><thead><tr><th>Mês</th><th>Investimento</th><th>Leads</th><th>Conversas</th><th>Vendas</th><th>ROAS</th><th>ROI</th></tr></thead><tbody>${months.map(x=>`<tr><td><strong>${x.mes}</strong></td><td>${money(x.investimento)}</td><td>${numberMaybe(x.leadsTrabalhados)}</td><td>${number(x.conversas)}</td><td>${moneyMaybe(x.vendas)}</td><td>${multipleMaybe(x.roas)}</td><td>${pctMaybe(x.roi)}</td></tr>`).join('')}</tbody></table></div>`;
+  $('resultsHistory').innerHTML=`<div class="results-history-table"><table class="table"><thead><tr><th>Mês</th><th>Investimento</th><th>Leads</th><th>Conversas</th><th>Vendas</th><th>ROAS</th><th>ROI de mídia</th></tr></thead><tbody>${months.map(x=>`<tr><td><strong>${x.mes}</strong></td><td>${money(x.investimento)}</td><td>${numberMaybe(x.leadsTrabalhados)}</td><td>${number(x.conversas)}</td><td>${moneyMaybe(x.vendas)}</td><td>${multipleMaybe(x.roas)}</td><td>${pctMaybe(x.roi)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function selectFair(fair){
@@ -327,7 +327,7 @@ function renderMeta(key){
   $('monthMetrics').innerHTML=[
     ['💰','Investimento',money(m.investimento),'investimento',true],
     ['💵','Vendas',moneyMaybe(m.vendas),'vendas'],
-    ['📈','ROI',pctMaybe(m.roi),'roi'],
+    ['📈','ROI de mídia',pctMaybe(m.roi),'roi'],
     ['🚀','ROAS',multipleMaybe(m.roas),'roas'],
     ['🧲','Leads trabalhados',numberMaybe(m.leadsTrabalhados),'leadsTrabalhados'],
     ['👤','Seguidores',numberMaybe(m.seguidores),'seguidores'],
@@ -454,9 +454,9 @@ function roiAssessment(m){
   else if(roi>=100){status='Retorno saudável';tone='good';}
   else if(roi>=0){status='Retorno positivo';tone='positive';}
   return `<div class="assessment-head ${tone}"><i></i><b>${status}</b></div>
-    <p><strong>ROI de ${pctMaybe(m.roi)}:</strong> representa ${money(Number(m.roi)/100)} de ganho além de cada R$ 1 investido.</p>
+    <p><strong>ROI de mídia de ${pctMaybe(m.roi)}:</strong> representa ${money(Number(m.roi)/100)} de retorno líquido da mídia além de cada R$ 1 investido em anúncios.</p>
     <p><strong>ROAS de ${multipleMaybe(m.roas)}:</strong> cada R$ 1 aplicado em mídia gerou ${money(m.roas)} em vendas.</p>
-    <small>O ROI exibido é uma estimativa baseada nas vendas atribuídas e no investimento em mídia. O lucro líquido real exige custos, impostos e despesas operacionais.</small>`;
+    <small>Fórmula usada: (vendas atribuídas − investimento em mídia) ÷ investimento em mídia. Este indicador não representa o lucro líquido da empresa, pois não desconta produtos, impostos, equipe e outras despesas.</small>`;
 }
 
 function kpiCard([icon,label,value,small]){
