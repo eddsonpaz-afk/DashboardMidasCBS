@@ -583,6 +583,40 @@ canvas{
 @media(max-width:720px){
   .executive-overview-heading{align-items:flex-start;flex-direction:column;gap:5px}.executive-overview-heading h2{font-size:28px}.executive-primary-kpis{grid-template-columns:1fr 1fr;gap:9px}.executive-primary-kpi{min-height:155px;padding:16px;border-radius:16px}.executive-primary-kpi>strong{font-size:25px;white-space:normal}.executive-kpi-top>span{width:36px;height:36px}.executive-kpi-top b{font-size:14px}.executive-primary-kpi>i{display:none}.executive-table-card,.executive-reading-card{padding:15px}.executive-table{min-width:720px}.executive-reading p{font-size:16px}
 }
+
+/* Escala tipográfica global — leitura confortável em todas as abas */
+body{font-size:17px}
+main button,main select,main input,main .file-label{font-size:15px!important;line-height:1.35}
+main p,main li{font-size:16px!important;line-height:1.65}
+main small{font-size:14px!important;line-height:1.45}
+main table th,main table td{font-size:15px!important;line-height:1.45;padding-top:14px;padding-bottom:14px}
+.module-tabs{width:268px}.shell{grid-template-columns:268px minmax(0,1fr)}
+.module-tab{min-height:54px;font-size:16px!important}.module-tab span{font-size:19px}.side-brand strong{font-size:20px}.side-brand small{font-size:13px!important}.side-label{font-size:12px}.side-footer span{font-size:14px}.side-footer small{font-size:12px!important}
+.hero-title p{font-size:14px}.hero-title h2{font-size:clamp(20px,2vw,28px)}
+.control-bar,#metaPanel>.control-bar{min-height:62px;gap:12px}.control-bar button,.control-bar select,.control-bar .file-label{min-height:46px;padding-left:16px;padding-right:16px}.control-bar .upload-status,.control-bar .soft-note,#metaPanel>.control-bar:before{font-size:13px!important}
+.deck-heading b,.section-label b,.executive-card-title b{font-size:19px!important}.deck-heading small,.section-label small,.executive-card-title small{font-size:14px!important}
+.card h3,.embedded-chart h3,.efficiency-panel h3,.sales-chart-panel h3,.flow-insights h3{font-size:18px!important;line-height:1.35}
+.kpi-card span,.result-kpi span,.metric-row span,.strategic-metric-title b,.sales-month-card span{font-size:14px!important;line-height:1.35}
+.kpi-card small,.result-kpi small,.sales-month-card small,.compare-line span{font-size:13px!important}
+.kpi-card b,.result-kpi b{font-size:clamp(28px,2.35vw,39px)!important}
+.metric-row b,.compare-line b,.scenario-stats b,.cost-line b{font-size:17px!important}
+.funnel-step span,.flow-deck .funnel-step span{font-size:14px!important}.funnel-step b,.flow-deck .funnel-step b{font-size:24px!important}
+.strategic-reading,.strategic-analysis,.highlight,.funnel-note,.fair-executive-note,.efficiency-assessment{font-size:16px!important;line-height:1.65}
+.strategic-metric small,.strategic-months small{font-size:13px!important}.strategic-metric strong,.strategic-months strong{font-size:18px!important}
+.result-step i{font-size:12px}.result-step span{font-size:14px}.result-step b{font-size:23px}
+.result-reading-list span,.result-reading-list b{font-size:15px}.result-disclaimer{font-size:13px!important}
+.results-control strong{font-size:20px}.crm-link{font-size:15px}.results-status strong{font-size:16px}.results-status small{font-size:13px!important}
+.ai-search-box label,.ai-data-scope b{font-size:16px}.ai-search-box input{font-size:17px}.ai-suggestions button{font-size:14px!important}.ai-data-scope span{font-size:14px}.ai-answer h3{font-size:24px}.ai-answer p{font-size:17px!important}
+.fair-intro p,.scenario-heading p,.fair-empty p{font-size:16px!important}.fair-intro h2,.fair-empty h2{font-size:clamp(28px,3vw,43px)}.fair-option{font-size:16px!important}.investment-card h3,.break-even-card h4,.scenario-card header strong{font-size:19px!important}.investment-total{font-size:clamp(34px,3.5vw,52px)!important}.cost-line span,.scenario-stats span,.scenario-stats p span{font-size:15px!important}.fair-return-summary small,.scenario-card footer span{font-size:13px!important}.fair-return-summary b{font-size:19px!important}.fair-sales-input input{font-size:26px!important}
+.war-layout h3,.war-lower h3{font-size:18px!important}.goal-box,.war-opps,.team-card,.app-card{font-size:15px}
+.executive-overview-heading span{font-size:13px}.executive-overview-heading small{font-size:14px!important}.executive-kpi-top b{font-size:18px}.executive-kpi-bottom small{font-size:14px!important}.executive-kpi-muted{font-size:14px}.executive-table{font-size:16px}.executive-table th,.executive-table td{font-size:16px!important}.executive-table td:first-child b{font-size:16px}.trend-pill{font-size:14px}.executive-reading p{font-size:20px!important}.executive-reading-footer{font-size:14px}
+
+@media(max-width:1020px){.module-tabs{width:92px}.shell{grid-template-columns:92px minmax(0,1fr)}}
+@media(max-width:720px){
+  body{font-size:16px}.module-tabs{width:auto}.shell{display:block}.module-tab{min-height:48px}.hero-title p{font-size:12px}.hero-title h2{font-size:17px}
+  main p,main li{font-size:15px!important}main table th,main table td{font-size:14px!important}.executive-reading p{font-size:17px!important}
+  .executive-kpi-top b{font-size:15px}.executive-kpi-bottom small{font-size:12px!important}.executive-primary-kpi>strong{font-size:26px!important}
+}
 @media print{
   .module-tabs,.control-bar{display:none!important}
   body{background:#05070b}
