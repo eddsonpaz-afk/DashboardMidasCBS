@@ -12,10 +12,15 @@
 <body>
 <main class="shell">
   <nav class="module-tabs">
-    <button class="module-tab active" data-panel="meta">📢 Meta Ads</button>
-    <button class="module-tab" data-panel="results">📈 Resultados</button>
-    <button class="module-tab" data-panel="war">🏗️ Sala de Guerra</button>
-    <button class="module-tab" data-panel="fairs">🎪 Feiras</button>
+    <div class="side-brand"><span>M</span><div><strong>MÍDIAS</strong><small>Performance & dados</small></div></div>
+    <div class="side-label">VISÃO GERAL</div>
+    <button class="module-tab active" data-panel="meta"><span>📢</span><b>Meta Ads</b></button>
+    <button class="module-tab" data-panel="results"><span>📈</span><b>Resultados</b></button>
+    <button class="module-tab" data-panel="ai"><span>✦</span><b>Pesquisa IA</b></button>
+    <div class="side-label">OPERAÇÃO</div>
+    <button class="module-tab" data-panel="war"><span>🏗️</span><b>Sala de Guerra</b></button>
+    <button class="module-tab" data-panel="fairs"><span>🎪</span><b>Feiras</b></button>
+    <div class="side-footer"><i></i><span>Base conectada</span><small>Waves Plus + CBS</small></div>
   </nav>
 
   <header class="hero">
@@ -174,6 +179,35 @@
     <section class="card results-history-card">
       <div class="section-label"><span>03</span><div><b>Histórico de resultados</b><small>Últimos três meses</small></div></div>
       <div id="resultsHistory"></div>
+    </section>
+  </section>
+
+  <section id="aiPanel" class="panel-view hidden">
+    <section class="ai-workspace">
+      <div class="ai-intro">
+        <span class="eyebrow">PESQUISA INTELIGENTE</span>
+        <h2>Pergunte aos seus dados</h2>
+        <p>Pesquise vendas, investimento, ROI, ROAS, conversas, cliques e evolução mensal.</p>
+      </div>
+      <div class="ai-search-box">
+        <label for="aiQuestion">O que você quer saber?</label>
+        <div><input id="aiQuestion" type="search" placeholder="Ex.: Qual mês teve o melhor ROI?" autocomplete="off"><button id="aiAsk">Analisar</button></div>
+      </div>
+      <div class="ai-suggestions">
+        <button data-ai-question="Qual mês teve mais vendas?">Maior venda</button>
+        <button data-ai-question="Qual foi o melhor ROI?">Melhor ROI</button>
+        <button data-ai-question="Compare os últimos 3 meses">Comparar 3 meses</button>
+        <button data-ai-question="Qual mês teve mais conversas?">Mais conversas</button>
+      </div>
+      <article id="aiAnswer" class="ai-answer">
+        <div class="ai-answer-icon">✦</div>
+        <div><small>ANÁLISE MÍDIAS</small><h3>Pronto para pesquisar</h3><p>Escolha uma pergunta acima ou escreva o que deseja analisar.</p></div>
+      </article>
+      <section class="ai-data-scope">
+        <div><b>Dados consultados</b><span>Resumo mensal, mídia, vendas, leads e retorno.</span></div>
+        <div><b>Atualização</b><span>Usa a mesma base conectada ao dashboard.</span></div>
+        <div><b>Confiabilidade</b><span>Campos ausentes permanecem como não informados.</span></div>
+      </section>
     </section>
   </section>
 
