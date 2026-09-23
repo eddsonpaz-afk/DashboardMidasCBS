@@ -558,6 +558,43 @@ canvas{
   }
 }
 
+/* Seletor global de mês — disponível em todas as abas */
+.shell>.global-month-bar{
+  grid-column:2;
+  position:sticky;
+  top:10px;
+  z-index:220;
+  width:100%;
+  margin:0;
+  display:flex;
+  align-items:center;
+  padding:12px 14px;
+  border:1px solid rgba(120,180,225,.22);
+  border-radius:17px;
+  background:rgba(8,27,47,.96);
+  box-shadow:0 16px 38px rgba(0,0,0,.28);
+  backdrop-filter:blur(20px) saturate(1.2);
+}
+.global-month-label{display:grid;min-width:170px;margin-right:auto}.global-month-label small{color:#76cfff!important;font-size:11px!important;font-weight:900;letter-spacing:.11em}.global-month-label strong{color:#fff;font-size:16px}
+.global-month-bar .upload-status{margin-left:auto;color:#bcd0e0!important;white-space:nowrap}
+.global-month-bar #monthSelect{min-width:170px;margin-left:8px;background:#173b5d;color:#fff;border-color:rgba(125,203,255,.30);font-weight:800}
+
+/* Jornada do resultado — dados maiores e leitura imediata */
+.results-path{gap:14px}
+.result-step{min-height:142px;padding:20px!important;display:flex;flex-direction:column;justify-content:center;border-radius:18px!important}
+.result-step i{font-size:13px!important;letter-spacing:.10em}
+.result-step span{margin:10px 0 4px!important;font-size:16px!important;font-weight:800;color:#536f89!important}
+.result-step b{font-size:clamp(27px,2.2vw,35px)!important;line-height:1.15;color:#102d55!important}
+.result-path-card{padding:26px!important}
+
+@media(max-width:1020px){.shell>.global-month-bar{grid-column:2}.global-month-label{min-width:140px}.global-month-bar .upload-status{display:none}}
+@media(max-width:720px){
+  .shell>.global-month-bar{position:sticky;top:6px;width:100%;margin:0 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+  .global-month-label{grid-column:1/-1}.global-month-bar #monthSelect{grid-column:1/-1;width:100%;margin:0;order:-1}.global-month-bar button{width:100%;padding:8px!important}.global-month-bar .upload-status{display:none}
+  .results-path{grid-template-columns:1fr 1fr}.result-step{min-height:126px;padding:16px!important}.result-step span{font-size:15px!important}.result-step b{font-size:26px!important}
+}
+@media(max-width:440px){.results-path{grid-template-columns:1fr}.result-step{min-height:112px}}
+
 /* Primeira aba — comparativo executivo aprovado */
 #metaPanel .midas-glass-stack,#metaPanel>.strategic-compare-section{display:none}
 .executive-overview{display:grid;gap:16px}
