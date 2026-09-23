@@ -300,12 +300,7 @@ function renderMeta(key){
   const prev=META.meses[META.meses.findIndex(x=>x.chave===key)-1];
   const campaigns=META.campanhas.filter(c=>c.mes===key).sort((a,b)=>b.conversas-a.conversas);
 
-  $('executiveKpis').innerHTML=[
-    ['💵','Vendas do mês',moneyMaybe(m.vendas),'Receita atribuída'],
-    ['💰','Investimento',money(m.investimento),'Mídia no mês'],
-    ['📈','ROI',pctMaybe(m.roi),roiCardDetail(m)],
-    ['🚀','ROAS',multipleMaybe(m.roas),roasCardDetail(m)]
-  ].map(kpiCard).join('');
+  renderExecutiveOverview(m,prev);
 
   $('channelKpis').innerHTML=[
     ['👁️','Impressões',number(m.impressoes),'Volume'],
@@ -391,6 +386,51 @@ function renderMeta(key){
 
   const gen=META.genero.filter(g=>g.mes===key);
   makeChart('genderChart','doughnut',gen.map(g=>g.nome),[{data:gen.map(g=>g.participacao),backgroundColor:['#2563eb','#ec4899','#64748b']}],true);
+}
+
+function renderExecutiveOverview(m,prev){
+  const delta=(field)=>prev&&hasValue(prev[field])&&Number(prev[field])!==0&&hasValue(m[field])
+    ?(Number(m[field])-Number(prev[field]))/Number(prev[field])*100:null;
+  const trendText=(value,invert=false)=>{
+    if(value===null)return 'Sem base suficiente';
+    const good=invert?value<=0:value>=0;
+    return `<span class="executive-kpi-trend ${good?'positive':'negative'}">${value>=0?'▲':'▼'} ${Math.abs(value).toFixed(1).replace('.',',')}%</span><small>vs. ${prev.mes.split('/')[0]}</small>`;
+  };
+  const salesReturn=hasValue(m.roi)&&hasValue(m.roas)?`${pctMaybe(m.roi)} • ${multipleMaybe(m.roas)}`:'Não informado';
+  const cards=[
+    ['💰','Investimento',money(m.investimento),trendText(delta('investimento')),'green'],
+    ['💬','Conversas',number(m.conversas),trendText(delta('conversas')),'blue'],
+    ['🛒','Vendas',moneyMaybe(m.vendas),hasValue(m.vendas)?trendText(delta('vendas')):'<span class="executive-kpi-muted">Sem base para comparação</span>','mint'],
+    ['📊','ROI / ROAS',salesReturn,hasValue(m.roi)?trendText(delta('roi')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','violet']
+  ];
+  $('executiveKpis').innerHTML=cards.map(([icon,label,value,reading,tone])=>`<article class="executive-primary-kpi ${tone}"><div class="executive-kpi-top"><span>${icon}</span><b>${label}</b></div><strong>${value}</strong><div class="executive-kpi-bottom">${reading}</div><i></i></article>`).join('');
+
+  const currentIndex=META.meses.findIndex(item=>item.chave===m.chave);
+  const months=META.meses.slice(Math.max(0,currentIndex-2),currentIndex+1);
+  $('executiveMonthsLabel').textContent=months.map(item=>item.mes.split('/')[0]).join(', ');
+  const rows=[
+    ['👤','Seguidores','seguidores',numberMaybe,'higher'],
+    ['💰','Investimento','investimento',money,'neutral'],
+    ['👁️','Impressões','impressoes',number,'higher'],
+    ['💬','Conversas','conversas',number,'higher'],
+    ['➤','Cliques','cliques',number,'higher'],
+    ['🎯','CPA','cpa',money,'lower']
+  ];
+  const previousMonth=months[months.length-2],currentMonth=months[months.length-1];
+  const pill=(field,goal)=>{
+    if(!previousMonth||!hasValue(previousMonth[field])||!hasValue(currentMonth[field])||Number(previousMonth[field])===0)return '<span class="trend-pill neutral">—</span>';
+    const change=(Number(currentMonth[field])-Number(previousMonth[field]))/Number(previousMonth[field])*100;
+    const good=goal==='neutral'?null:goal==='lower'?change<=0:change>=0;
+    return `<span class="trend-pill ${good===null?'neutral':good?'positive':'negative'}">${change>=0?'▲':'▼'} ${Math.abs(change).toFixed(1).replace('.',',')}%</span>`;
+  };
+  $('executiveCompareTable').innerHTML=`<table class="executive-table"><thead><tr><th>Indicador</th>${months.map(x=>`<th>${x.mes.split('/')[0]}</th>`).join('')}<th>Tendência</th></tr></thead><tbody>${rows.map(([icon,label,field,formatter,goal])=>`<tr><td><span>${icon}</span><b>${label}</b></td>${months.map(x=>`<td>${formatter(x[field])}</td>`).join('')}<td>${pill(field,goal)}</td></tr>`).join('')}</tbody></table>`;
+
+  const conversationDelta=delta('conversas'),cpaDelta=delta('cpa'),clickDelta=delta('cliques');
+  const movement=(value,up,down,invert=false)=>value===null?'sem comparação':`${value>=0?up:down} <strong class="${(invert?value<=0:value>=0)?'good':'bad'}">${Math.abs(value).toFixed(1).replace('.',',')}%</strong>`;
+  const salesSentence=hasValue(m.vendas)
+    ?`As vendas chegaram a <strong>${money(m.vendas)}</strong>, com ROI de <strong>${pctMaybe(m.roi)}</strong> e ROAS de <strong>${multipleMaybe(m.roas)}</strong>.`
+    :`${m.mes.split('/')[0]} ainda não possui vendas informadas para calcular ROI e ROAS.`;
+  $('executiveReading').innerHTML=`<p>As conversas ${movement(conversationDelta,'cresceram','recuaram')}, enquanto o CPA ${movement(cpaDelta,'subiu','caiu',true)}. Os cliques ${movement(clickDelta,'avançaram','recuaram')}.</p><p>${salesSentence}</p><div class="executive-reading-footer">▥ Mais dados, melhores decisões</div>`;
 }
 
 function roiCardDetail(m){
