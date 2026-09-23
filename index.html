@@ -39,14 +39,15 @@
     </div>
   </header>
 
-  <section id="metaPanel" class="panel-view">
-    <div class="control-bar">
-      <span id="metaSyncStatus" class="upload-status">● Conectando ao Google Sheets...</span>
-      <select id="monthSelect"></select>
-      <button id="metaRefresh">↻ Atualizar dados</button>
-      <button id="printMeta">📄 PDF</button>
-    </div>
+  <div class="control-bar global-month-bar">
+    <div class="global-month-label"><small>PERÍODO EM ANÁLISE</small><strong>Selecione o mês</strong></div>
+    <span id="metaSyncStatus" class="upload-status">● Conectando ao Google Sheets...</span>
+    <select id="monthSelect" aria-label="Selecionar mês"></select>
+    <button id="metaRefresh">↻ Atualizar dados</button>
+    <button id="printMeta">📄 PDF</button>
+  </div>
 
+  <section id="metaPanel" class="panel-view">
     <section class="executive-overview">
       <div class="executive-overview-heading">
         <div><span>VISÃO EXECUTIVA</span><h2>Comparativo dos últimos 3 meses</h2></div>
