@@ -172,9 +172,44 @@ function runAiSearch(rawQuestion){
   const months=(META?.meses||[]).filter(Boolean);
   const valid=(field)=>months.filter(m=>hasValue(m[field]));
   const best=(field)=>valid(field).sort((a,b)=>Number(b[field])-Number(a[field]))[0];
-  const latest=months[months.length-1];
+  const lowest=(field)=>valid(field).filter(m=>Number(m[field])>0).sort((a,b)=>Number(a[field])-Number(b[field]))[0];
+  const selected=months.find(m=>m.chave===$('monthSelect')?.value)||months[months.length-1];
+  const latest=selected||months[months.length-1];
   let title='Análise encontrada',answer='';
-  if(normalized.includes('venda')){
+  if((normalized.includes('compare')||normalized.includes('compar'))&&normalized.includes('venda')){
+    title='Vendas × investimento';
+    answer=valid('vendas').slice(-3).map(m=>`<strong>${m.mes}:</strong> ${money(m.vendas)} em vendas sobre ${money(m.investimento)} investidos — ROAS ${multipleMaybe(m.roas)}.`).join('<br>')||'Não há vendas registradas para comparar.';
+  }else if(normalized.includes('3 meses')||normalized.includes('compare')||normalized.includes('compar')){
+    const last=months.slice(-3); title='Comparativo dos últimos três meses';
+    answer=last.map(m=>`<strong>${m.mes}:</strong> ${money(m.investimento)} investidos, ${number(m.conversas)} conversas, ${moneyMaybe(m.vendas)} em vendas, ROI ${pctMaybe(m.roi)} e ROAS ${multipleMaybe(m.roas)}.`).join('<br>');
+  }else if(normalized.includes('menor cpa')){
+    const m=lowest('cpa'); title='Menor custo por conversa';
+    answer=m?`<strong>${m.mes}</strong> teve o menor CPA: <strong>${money(m.cpa)}</strong>, com ${number(m.conversas)} conversas.`:'Não há CPA suficiente para comparar.';
+  }else if(normalized.includes('menor cpc')){
+    const m=lowest('cpc'); title='Menor custo por clique';
+    answer=m?`<strong>${m.mes}</strong> teve o menor CPC: <strong>${money(m.cpc)}</strong>, com ${number(m.cliques)} cliques.`:'Não há CPC suficiente para comparar.';
+  }else if(normalized.includes('ctr')){
+    const m=best('ctr'); title='Melhor CTR';
+    answer=m?`O melhor CTR foi em <strong>${m.mes}</strong>: <strong>${pct(m.ctr)}</strong>, com ${number(m.cliques)} cliques.`:'Não há CTR suficiente para comparar.';
+  }else if(normalized.includes('eficiente')){
+    const ranked=months.filter(m=>hasValue(m.cpa)&&Number(m.cpa)>0).sort((a,b)=>Number(a.cpa)-Number(b.cpa)); const m=ranked[0]; title='Mês mais eficiente';
+    answer=m?`Pelo menor custo por conversa, <strong>${m.mes}</strong> foi o mês mais eficiente: CPA de <strong>${money(m.cpa)}</strong>, ${number(m.conversas)} conversas e ROAS ${multipleMaybe(m.roas)}.`:'Não há base suficiente para medir eficiência.';
+  }else if(normalized.includes('seguidor')){
+    const list=valid('seguidores').slice(-3); title='Evolução de seguidores';
+    answer=list.length?list.map(m=>`<strong>${m.mes}:</strong> ${number(m.seguidores)} seguidores`).join('<br>'):'Não há seguidores registrados.';
+  }else if(normalized.includes('impress')){
+    const m=best('impressoes'); title='Maior volume de impressões';
+    answer=m?`<strong>${m.mes}</strong> lidera com <strong>${number(m.impressoes)} impressões</strong> e alcance de ${number(m.alcance)}.`:'Não há impressões registradas.';
+  }else if(normalized.includes('lead')&&normalized.includes('conversa')){
+    const list=months.filter(m=>hasValue(m.leadsTrabalhados)).slice(-3); title='Leads × conversas';
+    answer=list.length?list.map(m=>`<strong>${m.mes}:</strong> ${number(m.leadsTrabalhados)} leads trabalhados e ${number(m.conversas)} conversas.`).join('<br>'):'Não há leads trabalhados suficientes para comparar.';
+  }else if(normalized.includes('falt')){
+    const fields=[['seguidores','seguidores'],['vendas','vendas'],['leadsTrabalhados','leads trabalhados']]; const missing=fields.filter(([key])=>!hasValue(latest?.[key])).map(([,label])=>label); title=`Dados ausentes em ${latest?.mes||'mês selecionado'}`;
+    answer=missing.length?`Ainda faltam: <strong>${missing.join(', ')}</strong>. As demais métricas principais estão preenchidas.`:'As métricas principais do mês estão preenchidas.';
+  }else if(normalized.includes('pior')||normalized.includes('atencao')){
+    const index=months.indexOf(latest),prev=months[index-1]; title='Pontos de atenção';
+    if(!prev)answer='Não há mês anterior suficiente para comparação.'; else { const alerts=[]; if(Number(latest.ctr)<Number(prev.ctr))alerts.push(`CTR caiu de ${pct(prev.ctr)} para ${pct(latest.ctr)}`); if(Number(latest.cpc)>Number(prev.cpc))alerts.push(`CPC subiu de ${money(prev.cpc)} para ${money(latest.cpc)}`); if(Number(latest.cliques)<Number(prev.cliques))alerts.push(`cliques recuaram de ${number(prev.cliques)} para ${number(latest.cliques)}`); answer=alerts.length?alerts.map(x=>`• ${x}`).join('<br>'):'Não foram identificadas pioras nos principais indicadores disponíveis.'; }
+  }else if(normalized.includes('venda')){
     const m=best('vendas'); title='Maior resultado em vendas';
     answer=m?`<strong>${m.mes}</strong> teve o maior valor registrado: <strong>${money(m.vendas)}</strong>. O ROAS foi ${multipleMaybe(m.roas)} e o ROI ${pctMaybe(m.roi)}.`:'Ainda não há vendas registradas na base.';
   }else if(normalized.includes('roas')){
@@ -192,14 +227,16 @@ function runAiSearch(rawQuestion){
   }else if(normalized.includes('invest')){
     const m=best('investimento'); title='Maior investimento';
     answer=m?`O maior investimento foi em <strong>${m.mes}</strong>: <strong>${money(m.investimento)}</strong>. Foram ${number(m.impressoes)} impressões e ${number(m.conversas)} conversas.`:'Não há investimentos registrados.';
-  }else if(normalized.includes('3 meses')||normalized.includes('compare')||normalized.includes('compar')){
-    const last=months.slice(-3); title='Comparativo dos últimos três meses';
-    answer=last.map(m=>`<strong>${m.mes}:</strong> ${money(m.investimento)} investidos, ${number(m.conversas)} conversas, ${moneyMaybe(m.vendas)} em vendas e ROI ${pctMaybe(m.roi)}.`).join('<br>');
   }else{
     title=`Resumo de ${latest?.mes||'dados atuais'}`;
     answer=latest?`Foram investidos <strong>${money(latest.investimento)}</strong>, gerando <strong>${number(latest.impressoes)} impressões</strong>, <strong>${number(latest.cliques)} cliques</strong> e <strong>${number(latest.conversas)} conversas</strong>. Vendas: <strong>${moneyMaybe(latest.vendas)}</strong>; ROI: <strong>${pctMaybe(latest.roi)}</strong>.`:'A base ainda não foi carregada.';
   }
   $('aiAnswer').innerHTML=`<div class="ai-answer-icon">✦</div><div><small>ANÁLISE MÍDIAS</small><h3>${title}</h3><p>${answer}</p></div>`;
+  $('aiAnswer').classList.remove('answer-updated');
+  requestAnimationFrame(()=>{
+    $('aiAnswer').classList.add('answer-updated');
+    $('aiAnswer').scrollIntoView({behavior:'smooth',block:'center'});
+  });
 }
 
 function renderResults(key){
