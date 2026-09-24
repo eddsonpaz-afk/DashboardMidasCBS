@@ -321,6 +321,10 @@ canvas{
   max-height:305px;
   overflow:auto;
 }
+.campaign-month-total{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:1.35fr repeat(4,1fr);gap:8px;margin-bottom:10px;padding:12px;border:2px solid #59c7ff;border-radius:14px;background:linear-gradient(100deg,#0b4169,#116fa6);box-shadow:0 8px 22px rgba(4,34,61,.28);color:#fff}
+.campaign-month-total>div{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:3px 10px;border-left:1px solid rgba(255,255,255,.2)}
+.campaign-month-total>div:first-child{border-left:0}.campaign-month-total span{color:#bfeaff;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.campaign-month-total strong{margin-top:3px;color:#fff;font-size:19px;line-height:1.1}.campaign-month-total small{color:#d9effc;font-size:11px}
+@media(max-width:720px){.campaign-month-total{position:relative;grid-template-columns:1fr 1fr}.campaign-month-total>div{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:8px}.campaign-month-total>div:first-child{grid-column:1/-1;border-top:0}.campaign-month-total strong{font-size:18px}}
 .table{
   width:100%;
   border-collapse:collapse;
