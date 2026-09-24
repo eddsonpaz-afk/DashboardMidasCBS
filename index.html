@@ -212,11 +212,43 @@
         <label for="aiQuestion">O que você quer saber?</label>
         <div><input id="aiQuestion" type="search" placeholder="Ex.: Qual mês teve o melhor ROI?" autocomplete="off"><button id="aiAsk">Analisar</button></div>
       </div>
-      <div class="ai-suggestions">
-        <button data-ai-question="Qual mês teve mais vendas?">Maior venda</button>
-        <button data-ai-question="Qual foi o melhor ROI?">Melhor ROI</button>
-        <button data-ai-question="Compare os últimos 3 meses">Comparar 3 meses</button>
-        <button data-ai-question="Qual mês teve mais conversas?">Mais conversas</button>
+      <div class="ai-question-groups">
+        <section>
+          <b>Resultados</b>
+          <div class="ai-suggestions">
+            <button data-ai-question="Qual mês teve mais vendas?">Maior venda</button>
+            <button data-ai-question="Qual foi o melhor ROI?">Melhor ROI</button>
+            <button data-ai-question="Qual foi o melhor ROAS?">Melhor ROAS</button>
+            <button data-ai-question="Compare vendas e investimento">Vendas × investimento</button>
+          </div>
+        </section>
+        <section>
+          <b>Eficiência</b>
+          <div class="ai-suggestions">
+            <button data-ai-question="Qual mês teve o menor CPA?">Menor CPA</button>
+            <button data-ai-question="Qual mês teve o menor CPC?">Menor CPC</button>
+            <button data-ai-question="Qual mês teve o melhor CTR?">Melhor CTR</button>
+            <button data-ai-question="Qual mês foi mais eficiente?">Mês mais eficiente</button>
+          </div>
+        </section>
+        <section>
+          <b>Audiência e funil</b>
+          <div class="ai-suggestions">
+            <button data-ai-question="Como evoluíram os seguidores?">Evolução de seguidores</button>
+            <button data-ai-question="Qual mês teve mais impressões?">Mais impressões</button>
+            <button data-ai-question="Qual mês teve mais conversas?">Mais conversas</button>
+            <button data-ai-question="Os leads estão acompanhando as conversas?">Leads × conversas</button>
+          </div>
+        </section>
+        <section>
+          <b>Diagnóstico</b>
+          <div class="ai-suggestions">
+            <button data-ai-question="Compare os últimos 3 meses">Comparar 3 meses</button>
+            <button data-ai-question="Onde o desempenho piorou?">Pontos de atenção</button>
+            <button data-ai-question="Quais dados estão faltando?">Dados ausentes</button>
+            <button data-ai-question="Resuma o mês selecionado">Resumo do mês</button>
+          </div>
+        </section>
       </div>
       <article id="aiAnswer" class="ai-answer">
         <div class="ai-answer-icon">✦</div>
