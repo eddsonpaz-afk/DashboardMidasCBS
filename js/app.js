@@ -508,6 +508,13 @@ function renderCampaignTable(camps,m){
   }),{investimento:0,impressoes:0,cliques:0,conversas:0});
   const avgCpa=totals.conversas?totals.investimento/totals.conversas:0;
   $('campaignTable').innerHTML=`
+  <div class="campaign-month-total">
+    <div><span>Total do mês</span><strong>${money(totals.investimento)}</strong><small>investidos</small></div>
+    <div><span>Impressões</span><strong>${number(totals.impressoes)}</strong></div>
+    <div><span>Cliques</span><strong>${number(totals.cliques)}</strong></div>
+    <div><span>Conversas</span><strong>${number(totals.conversas)}</strong></div>
+    <div><span>CPA médio</span><strong>${money(avgCpa)}</strong></div>
+  </div>
   <table class="table">
     <thead><tr><th>Campanha</th><th>Invest.</th><th>Impress.</th><th>Cliques</th><th>Conv.</th><th>CPA</th><th>CPC</th><th>CTR</th></tr></thead>
     <tbody>${camps.map(c=>`<tr><td>${c.nome}</td><td>${money(c.investimento)}</td><td>${number(c.impressoes)}</td><td>${number(c.cliques)}</td><td>${number(c.conversas)}</td><td>${c.cpa?money(c.cpa):'–'}</td><td>${money(c.cpc)}</td><td>${pct(c.ctr)}</td></tr>`).join('')}</tbody>
