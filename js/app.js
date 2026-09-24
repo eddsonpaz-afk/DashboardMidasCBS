@@ -165,7 +165,46 @@ function switchPanel(panel){
   }
 }
 
-function runAiSearch(rawQuestion){
+function aiDashboardContext(){
+  const selected=META?.meses?.find(m=>m.chave===$('monthSelect')?.value)||META?.meses?.at(-1)||null;
+  return {
+    dashboard:'Dashboard MÍDIAS — Waves Plus e CBS',
+    periodoSelecionado:selected?.mes||'',
+    mesSelecionado:selected,
+    historicoMensal:(META?.meses||[]).slice(-6),
+    campanhasDoPeriodo:(META?.campanhas||[]).filter(c=>c.mes===selected?.chave).slice(0,30),
+    regras:{roi:'(vendas - investimento em mídia) / investimento em mídia',roas:'vendas / investimento em mídia'},
+    instrucao:'Analise apenas os dados enviados. Diferencie ROI de ROAS, aponte dados ausentes e não invente números.'
+  };
+}
+
+function safeAiText(value){
+  return String(value||'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char])).replace(/\n/g,'<br>');
+}
+
+async function runAiSearch(rawQuestion){
+  const question=String(rawQuestion||'').trim();
+  if(!question)return;
+  const answerBox=$('aiAnswer');
+  answerBox.innerHTML='<div class="ai-answer-icon ai-thinking">✦</div><div><small>LUCA • IA CBS</small><h3>Analisando os dados…</h3><p>Comparando indicadores e preparando uma resposta objetiva.</p></div>';
+  answerBox.scrollIntoView({behavior:'smooth',block:'center'});
+  try{
+    const response=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,context:aiDashboardContext()})});
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok||!payload.ok||!payload.answer)throw new Error(payload.error||'A IA não respondeu.');
+    answerBox.innerHTML=`<div class="ai-answer-icon">✦</div><div><small>LUCA • ${safeAiText(payload.model||'IA CBS')}</small><h3>Análise inteligente</h3><p>${safeAiText(payload.answer)}</p></div>`;
+    answerBox.classList.remove('answer-updated');
+    requestAnimationFrame(()=>answerBox.classList.add('answer-updated'));
+  }catch(error){
+    runLocalAnalysis(question);
+    const note=document.createElement('small');
+    note.className='ai-fallback-note';
+    note.textContent=`Análise local de reserva: ${error.message}`;
+    answerBox.querySelector('div:last-child')?.appendChild(note);
+  }
+}
+
+function runLocalAnalysis(rawQuestion){
   const question=String(rawQuestion||'').trim();
   if(!question)return;
   const normalized=question.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
