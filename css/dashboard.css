@@ -608,6 +608,17 @@ canvas{
 }
 @media(max-width:440px){.results-path{grid-template-columns:1fr}.result-step{min-height:112px}}
 
+/* Pesquisa IA — grupos claros e retorno visível */
+.ai-question-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+.ai-question-groups>section{padding:16px;border:1px solid rgba(89,199,255,.22);border-radius:16px;background:rgba(11,48,77,.72)}
+.ai-question-groups>section>b{display:block;margin-bottom:10px;color:#bfeaff;font-size:14px;text-transform:uppercase;letter-spacing:.08em}
+.ai-question-groups .ai-suggestions{display:flex;flex-wrap:wrap;gap:8px}
+.ai-question-groups button{min-height:40px;padding:9px 12px;border-color:rgba(112,199,247,.25);background:#153f62;color:#edf8ff;font-size:14px;font-weight:750}
+.ai-answer{scroll-margin:150px}
+.ai-answer.answer-updated{animation:aiAnswerPulse .7s ease both;box-shadow:0 0 0 3px rgba(56,189,248,.28),0 18px 42px rgba(3,31,54,.24)}
+@keyframes aiAnswerPulse{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
+@media(max-width:720px){.ai-question-groups{grid-template-columns:1fr}.ai-question-groups button{flex:1 1 140px}}
+
 /* Primeira aba — comparativo executivo aprovado */
 #metaPanel .midas-glass-stack,#metaPanel>.strategic-compare-section{display:none}
 .executive-overview{display:grid;gap:16px}
