@@ -396,12 +396,12 @@ function renderExecutiveOverview(m,prev){
     const good=invert?value<=0:value>=0;
     return `<span class="executive-kpi-trend ${good?'positive':'negative'}">${value>=0?'▲':'▼'} ${Math.abs(value).toFixed(1).replace('.',',')}%</span><small>vs. ${prev.mes.split('/')[0]}</small>`;
   };
-  const salesReturn=hasValue(m.roi)&&hasValue(m.roas)?`${pctMaybe(m.roi)} • ${multipleMaybe(m.roas)}`:'Não informado';
   const cards=[
     ['💰','Investimento',money(m.investimento),trendText(delta('investimento')),'green'],
     ['💬','Conversas',number(m.conversas),trendText(delta('conversas')),'blue'],
     ['🛒','Vendas',moneyMaybe(m.vendas),hasValue(m.vendas)?trendText(delta('vendas')):'<span class="executive-kpi-muted">Sem base para comparação</span>','mint'],
-    ['📊','ROI / ROAS',salesReturn,hasValue(m.roi)?trendText(delta('roi')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','violet']
+    ['📈','ROI de mídia',pctMaybe(m.roi),hasValue(m.roi)?trendText(delta('roi')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','violet'],
+    ['🚀','ROAS',multipleMaybe(m.roas),hasValue(m.roas)?trendText(delta('roas')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','gold']
   ];
   $('executiveKpis').innerHTML=cards.map(([icon,label,value,reading,tone])=>`<article class="executive-primary-kpi ${tone}"><div class="executive-kpi-top"><span>${icon}</span><b>${label}</b></div><strong>${value}</strong><div class="executive-kpi-bottom">${reading}</div><i></i></article>`).join('');
 
@@ -511,7 +511,7 @@ function renderCampaignTable(camps,m){
   <table class="table">
     <thead><tr><th>Campanha</th><th>Invest.</th><th>Impress.</th><th>Cliques</th><th>Conv.</th><th>CPA</th><th>CPC</th><th>CTR</th></tr></thead>
     <tbody>${camps.map(c=>`<tr><td>${c.nome}</td><td>${money(c.investimento)}</td><td>${number(c.impressoes)}</td><td>${number(c.cliques)}</td><td>${number(c.conversas)}</td><td>${c.cpa?money(c.cpa):'–'}</td><td>${money(c.cpc)}</td><td>${pct(c.ctr)}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td>Total do mês</td><td>${money(totals.investimento)}</td><td>${number(totals.impressoes)}</td><td>${number(totals.cliques)}</td><td>${number(totals.conversas)}</td><td>${money(avgCpa)}</td><td>–</td><td>${pct(m.ctr)}</td></tr></tfoot>
+    <tfoot><tr><td><strong>∑ Total do mês</strong></td><td>${money(totals.investimento)}</td><td>${number(totals.impressoes)}</td><td>${number(totals.cliques)}</td><td>${number(totals.conversas)}</td><td>${money(avgCpa)}</td><td>–</td><td>${pct(m.ctr)}</td></tr></tfoot>
   </table>`;
 }
 
