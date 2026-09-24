@@ -616,7 +616,9 @@ canvas{
 .ai-question-groups button{min-height:40px;padding:9px 12px;border-color:rgba(112,199,247,.25);background:#153f62;color:#edf8ff;font-size:14px;font-weight:750}
 .ai-answer{scroll-margin:150px}
 .ai-answer.answer-updated{animation:aiAnswerPulse .7s ease both;box-shadow:0 0 0 3px rgba(56,189,248,.28),0 18px 42px rgba(3,31,54,.24)}
+.ai-thinking{animation:aiThinking 1.1s ease-in-out infinite}.ai-fallback-note{display:block;margin-top:14px;color:#8ba4b9;font-size:12px!important}
 @keyframes aiAnswerPulse{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
+@keyframes aiThinking{50%{transform:scale(1.15) rotate(12deg);filter:drop-shadow(0 0 8px #38bdf8)}}
 @media(max-width:720px){.ai-question-groups{grid-template-columns:1fr}.ai-question-groups button{flex:1 1 140px}}
 
 /* Primeira aba — comparativo executivo aprovado */
