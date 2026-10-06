@@ -10,7 +10,7 @@ const moneyMaybe=v=>hasValue(v)?money(v):'Não informado';
 const numberMaybe=v=>hasValue(v)?number(v):'Não informado';
 const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
-let META, EXPO, FAIR_SALES=[], COMMERCIAL_MONTHS=[], charts={};
+let META, EXPO, FAIR_SALES=[], COMMERCIAL_MONTHS=[], LEAD_MONTHS=[], charts={};
 
 const GOOGLE_SHEET_ID='10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego';
 
@@ -39,6 +39,26 @@ Promise.all([
   }catch(error){
     console.warn('BANCO1 indisponível.',error);
     window.__midasCommercialOnline=false;
+  }
+  try{
+    const leadPerformance=await fetch('/api/leads-performance',{cache:'no-store'}).then(response=>{
+      if(!response.ok)throw new Error('vendas por leads indisponíveis');
+      return response.json();
+    });
+    LEAD_MONTHS=leadPerformance.months||[];
+    LEAD_MONTHS.forEach(item=>{
+      const month=META.meses.find(m=>m.chave===item.chave);
+      if(!month)return;
+      month.vendas=item.vendas;
+      month.leadsTrabalhados=item.leads;
+      month.ganhosLeads=item.ganhos;
+      month.roas=Number(month.investimento)>0?item.vendas/Number(month.investimento):null;
+      month.roi=Number(month.investimento)>0?(item.vendas-Number(month.investimento))/Number(month.investimento)*100:null;
+    });
+    window.__midasLeadsOnline=Boolean(leadPerformance.ok&&LEAD_MONTHS.length);
+  }catch(error){
+    console.warn('Dashboard Comercial indisponível; usando vendas da planilha.',error);
+    window.__midasLeadsOnline=false;
   }
   init();
 });
@@ -188,6 +208,7 @@ function aiDashboardContext(){
     mesSelecionado:selected,
     historicoMensal:(META?.meses||[]).slice(-6),
     resultadoComercialBanco1:COMMERCIAL_MONTHS.slice(-6),
+    vendasGeradasPorLeads:LEAD_MONTHS.slice(-6),
     campanhasDoPeriodo:(META?.campanhas||[]).filter(c=>c.mes===selected?.chave).slice(0,30),
     regras:{roi:'(vendas - investimento em mídia) / investimento em mídia',roas:'vendas / investimento em mídia'},
     instrucao:'Analise apenas os dados enviados. Diferencie ROI de ROAS, aponte dados ausentes e não invente números.'
@@ -299,19 +320,18 @@ function renderResults(key){
   const commercial=commercialFor(m?.chave);
   if(!m||!$('resultsKpis'))return;
   const hasSales=hasValue(m.vendas);
-  const commercialSales=commercial?.atendido||null;
   const leadToConversation=hasValue(m.leadsTrabalhados)&&Number(m.leadsTrabalhados)>0
     ?Number(m.conversas||0)/Number(m.leadsTrabalhados)*100:null;
   const costPerLead=hasValue(m.leadsTrabalhados)&&Number(m.leadsTrabalhados)>0
     ?Number(m.investimento||0)/Number(m.leadsTrabalhados):null;
-  $('resultsStatus').innerHTML=hasSales||commercialSales
+  $('resultsStatus').innerHTML=hasSales
     ?`<span class="status-dot online"></span><div><small>Resultado registrado</small><strong>${m.mes}</strong></div>`
     :`<span class="status-dot pending"></span><div><small>Aguardando venda do mês</small><strong>${m.mes}</strong></div>`;
   $('resultsKpis').innerHTML=[
     ['Investimento',money(m.investimento),'Mídia paga','cyan'],
     ['Leads trabalhados',numberMaybe(m.leadsTrabalhados),'Base comercial','blue'],
     ['Conversas',number(m.conversas),'WhatsApp','violet'],
-    ['Vendas totais',commercialSales?money(commercialSales):moneyMaybe(m.vendas),commercialSales?'BANCO1 · atendido':'Receita atribuída','green'],
+    ['Vendas por leads',moneyMaybe(m.vendas),'Dashboard Comercial','green'],
     ['ROAS',multipleMaybe(m.roas),'Receita por real','gold'],
     ['ROI de mídia',pctMaybe(m.roi),'Retorno estimado','pink']
   ].map(([label,value,sub,tone])=>`<article class="result-kpi ${tone}"><span>${label}</span><b>${value}</b><small>${sub}</small></article>`).join('');
@@ -322,13 +342,12 @@ function renderResults(key){
     ['Cliques',number(m.cliques)],
     ['Conversas',number(m.conversas)],
     ['Leads trabalhados',numberMaybe(m.leadsTrabalhados)],
-    ['Vendas totais',commercialSales?money(commercialSales):moneyMaybe(m.vendas)]
+    ['Vendas por leads',moneyMaybe(m.vendas)]
   ];
   $('resultsPath').innerHTML=steps.map((s,i)=>`<div class="result-step"><i>${String(i+1).padStart(2,'0')}</i><span>${s[0]}</span><b>${s[1]}</b></div>`).join('');
-  const commercialText=commercialSales?`A BANCO1 registra <strong>${money(commercialSales)}</strong> em vendas atendidas no período. `:'';
   const salesText=hasSales
-    ?`${commercialText}As vendas atribuídas à mídia chegaram a <strong>${money(m.vendas)}</strong>. O ROAS foi de <strong>${multipleMaybe(m.roas)}</strong> e o ROI estimado de <strong>${pctMaybe(m.roi)}</strong>.`
-    :`${commercialText}Como não há venda atribuída à mídia informada, ROI e ROAS permanecem em aberto — a venda total da empresa não é usada para fabricar atribuição de anúncios.`;
+    ?`Os leads geraram <strong>${money(m.vendas)}</strong> em vendas. O ROAS foi de <strong>${multipleMaybe(m.roas)}</strong> e o ROI de <strong>${pctMaybe(m.roi)}</strong>, calculados sobre a verba de mídia do período.`
+    :`Ainda não há venda gerada pelos leads neste mês. ROI e ROAS permanecem em aberto até existir receita registrada no Dashboard Comercial.`;
   $('resultsReading').innerHTML=`
     <p>${salesText}</p>
     <div class="result-reading-list">
@@ -445,7 +464,7 @@ function renderMeta(key){
 
   $('monthMetrics').innerHTML=[
     ['💰','Investimento',money(m.investimento),'investimento',true],
-    ['💵','Vendas totais',commercial?money(commercial.atendido):moneyMaybe(m.vendas),'vendas'],
+    ['💵','Vendas por leads',moneyMaybe(m.vendas),'vendas'],
     ['📈','ROI de mídia',pctMaybe(m.roi),'roi'],
     ['🚀','ROAS',multipleMaybe(m.roas),'roas'],
     ['🧲','Leads trabalhados',numberMaybe(m.leadsTrabalhados),'leadsTrabalhados'],
@@ -508,8 +527,6 @@ function renderMeta(key){
 }
 
 function renderExecutiveOverview(m,prev){
-  const commercial=commercialFor(m.chave);
-  const previousCommercial=prev?commercialFor(prev.chave):null;
   const delta=(field)=>prev&&hasValue(prev[field])&&Number(prev[field])!==0&&hasValue(m[field])
     ?(Number(m[field])-Number(prev[field]))/Number(prev[field])*100:null;
   const trendText=(value,invert=false)=>{
@@ -520,7 +537,7 @@ function renderExecutiveOverview(m,prev){
   const cards=[
     ['💰','Investimento',money(m.investimento),trendText(delta('investimento')),'green'],
     ['💬','Conversas',number(m.conversas),trendText(delta('conversas')),'blue'],
-    ['🛒','Vendas BANCO1',commercial?money(commercial.atendido):moneyMaybe(m.vendas),commercial&&previousCommercial?trendText((commercial.atendido-previousCommercial.atendido)/previousCommercial.atendido*100):'<span class="executive-kpi-muted">Sem base para comparação</span>','mint'],
+    ['🛒','Vendas por leads',moneyMaybe(m.vendas),hasValue(m.vendas)?trendText(delta('vendas')):'<span class="executive-kpi-muted">Sem base para comparação</span>','mint'],
     ['📈','ROI de mídia',pctMaybe(m.roi),hasValue(m.roi)?trendText(delta('roi')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','violet'],
     ['🚀','ROAS',multipleMaybe(m.roas),hasValue(m.roas)?trendText(delta('roas')):'<span class="executive-kpi-muted">Informe as vendas do mês</span>','gold']
   ];
