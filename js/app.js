@@ -10,7 +10,7 @@ const moneyMaybe=v=>hasValue(v)?money(v):'Não informado';
 const numberMaybe=v=>hasValue(v)?number(v):'Não informado';
 const pctMaybe=v=>hasValue(v)?pct(v):'Não informado';
 const multipleMaybe=v=>hasValue(v)?`${Number(v).toFixed(2).replace('.',',')}x`:'Não informado';
-let META, EXPO, FAIR_SALES=[], charts={};
+let META, EXPO, FAIR_SALES=[], COMMERCIAL_MONTHS=[], charts={};
 
 const GOOGLE_SHEET_ID='10Eov7SGTLp6wuzmpSObIUyVkcn6K3jVh0rMAqe-Uego';
 
@@ -29,8 +29,23 @@ Promise.all([
     console.warn('Google Sheets indisponível; usando base de segurança.',error);
     window.__midasSheetOnline=false;
   }
+  try{
+    const commercial=await fetch('/api/commercial',{cache:'no-store'}).then(response=>{
+      if(!response.ok)throw new Error('base comercial indisponível');
+      return response.json();
+    });
+    COMMERCIAL_MONTHS=commercial.months||[];
+    window.__midasCommercialOnline=Boolean(commercial.ok&&COMMERCIAL_MONTHS.length);
+  }catch(error){
+    console.warn('BANCO1 indisponível.',error);
+    window.__midasCommercialOnline=false;
+  }
   init();
 });
+
+function commercialFor(key){
+  return COMMERCIAL_MONTHS.find(item=>item.chave===key)||null;
+}
 
 async function fetchGoogleSheetRows(sheet){
   const url=`https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}`;
@@ -172,6 +187,7 @@ function aiDashboardContext(){
     periodoSelecionado:selected?.mes||'',
     mesSelecionado:selected,
     historicoMensal:(META?.meses||[]).slice(-6),
+    resultadoComercialBanco1:COMMERCIAL_MONTHS.slice(-6),
     campanhasDoPeriodo:(META?.campanhas||[]).filter(c=>c.mes===selected?.chave).slice(0,30),
     regras:{roi:'(vendas - investimento em mídia) / investimento em mídia',roas:'vendas / investimento em mídia'},
     instrucao:'Analise apenas os dados enviados. Diferencie ROI de ROAS, aponte dados ausentes e não invente números.'
@@ -280,6 +296,7 @@ function runLocalAnalysis(rawQuestion){
 
 function renderResults(key){
   const m=META?.meses?.find(x=>x.chave===key)||META?.meses?.[META.meses.length-1];
+  const commercial=commercialFor(m?.chave);
   if(!m||!$('resultsKpis'))return;
   const hasSales=hasValue(m.vendas);
   const leadToConversation=hasValue(m.leadsTrabalhados)&&Number(m.leadsTrabalhados)>0
@@ -297,6 +314,7 @@ function renderResults(key){
     ['ROAS',multipleMaybe(m.roas),'Receita por real','gold'],
     ['ROI de mídia',pctMaybe(m.roi),'Retorno estimado','pink']
   ].map(([label,value,sub,tone])=>`<article class="result-kpi ${tone}"><span>${label}</span><b>${value}</b><small>${sub}</small></article>`).join('');
+  renderBanco1(commercial,m);
   const steps=[
     ['Investimento',money(m.investimento)],
     ['Impressões',number(m.impressoes)],
@@ -320,6 +338,28 @@ function renderResults(key){
     <small class="result-disclaimer"><strong>ROI de mídia = (vendas atribuídas − investimento em mídia) ÷ investimento em mídia.</strong> Ele mede o retorno da verba de anúncios, não o lucro líquido da empresa. O lucro real exige custos dos produtos, impostos, equipe e demais despesas.</small>`;
   const months=META.meses.slice(-3);
   $('resultsHistory').innerHTML=`<div class="results-history-table"><table class="table"><thead><tr><th>Mês</th><th>Investimento</th><th>Leads</th><th>Conversas</th><th>Vendas</th><th>ROAS</th><th>ROI de mídia</th></tr></thead><tbody>${months.map(x=>`<tr><td><strong>${x.mes}</strong></td><td>${money(x.investimento)}</td><td>${numberMaybe(x.leadsTrabalhados)}</td><td>${number(x.conversas)}</td><td>${moneyMaybe(x.vendas)}</td><td>${multipleMaybe(x.roas)}</td><td>${pctMaybe(x.roi)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function renderBanco1(commercial,mediaMonth){
+  if(!$('banco1Kpis'))return;
+  const online=Boolean(commercial&&window.__midasCommercialOnline);
+  $('banco1Status').innerHTML=online
+    ?`<span class="status-dot online"></span><strong>Sincronizado com a aba BANCO1</strong><small>Dados até ${new Date(`${commercial.dataFim}T12:00:00`).toLocaleDateString('pt-BR')}</small>`
+    :`<span class="status-dot pending"></span><strong>Sem dados comerciais para ${mediaMonth?.mes||'este período'}</strong>`;
+  const items=commercial?[
+    ['Vendas atendidas',money(commercial.atendido),'Valor usado como venda comercial'],
+    ['Faturado',money(commercial.faturado),'Receita já faturada'],
+    ['Pedidos recebidos',money(commercial.pedido),'Valor total dos pedidos'],
+    ['Clientes',number(commercial.clientes),'Clientes únicos no mês'],
+    ['Pedidos',number(commercial.pedidos),'Quantidade de pedidos'],
+    ['Vendedores',number(commercial.vendedores),'Equipe com vendas'],
+    ['Ticket médio',money(commercial.ticketMedio),'Média por cliente']
+  ]:[];
+  $('banco1Kpis').innerHTML=items.length
+    ?items.map(([label,value,detail])=>`<article><span>${label}</span><b>${value}</b><small>${detail}</small></article>`).join('')
+    :'<p class="banco1-empty">A base comercial ainda não tem movimento neste mês.</p>';
+  const history=COMMERCIAL_MONTHS.slice(-3);
+  $('banco1History').innerHTML=history.length?`<div class="results-history-table"><table class="table"><thead><tr><th>Mês</th><th>Vendas atendidas</th><th>Faturado</th><th>Clientes</th><th>Pedidos</th><th>Ticket médio</th></tr></thead><tbody>${history.map(item=>`<tr class="${item.chave===commercial?.chave?'current':''}"><td><strong>${item.mes}</strong></td><td>${money(item.atendido)}</td><td>${money(item.faturado)}</td><td>${number(item.clientes)}</td><td>${number(item.pedidos)}</td><td>${money(item.ticketMedio)}</td></tr>`).join('')}</tbody></table></div>`:'';
 }
 
 function selectFair(fair){
