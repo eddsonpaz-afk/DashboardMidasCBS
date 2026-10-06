@@ -13,6 +13,8 @@ async function loadMonth(year,month){
   const data=await upstream.json().catch(()=>({}));
   if(!upstream.ok)throw new Error(data.error||`Falha ao consultar ${monthName(month)}`);
   const current=data.metrics?.current||{};
+  const requestedEnd=data.filters?.endDate||iso(year,month,lastDay);
+  const sourceEnd=data.dataRange?.end||requestedEnd;
   return {
     chave:`${year}-${String(month).padStart(2,'0')}`,
     mes:`${monthName(month)}/${year}`,
@@ -24,7 +26,7 @@ async function loadMonth(year,month){
     vendedores:Number(current.sellers||0),
     ticketMedio:Number(current.ticket||0),
     dataInicio:data.filters?.startDate||iso(year,month,1),
-    dataFim:data.dataRange?.end||data.filters?.endDate||iso(year,month,lastDay)
+    dataFim:sourceEnd<requestedEnd?sourceEnd:requestedEnd
   };
 }
 
